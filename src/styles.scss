@@ -1,1 +1,38 @@
-/* You can add global styles to this file, and also import other style files */
+/** Imports **/
+
+@import './theme/input.scss';
+@import './theme/button.scss';
+
+/** End Imports **/
+
+* {
+  font-family: 'Roboto', sans-serif !important;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  outline: 0;
+  padding: 0;
+  margin: 0;
+}
+
+input {
+  box-sizing: border-box;
+}
+
+body {
+  width: 100%;
+  overflow-x: hidden;
+
+  &::-webkit-scrollbar {
+    width: 9px;
+    background: #101010 0 0 no-repeat padding-box;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: red 0 0 no-repeat padding-box;
+  }
+}
+
+.disable {
+  pointer-events: none;
+  opacity: 0.7;
+}
