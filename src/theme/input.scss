@@ -1,0 +1,53 @@
+.input-container {
+  width: 100%;
+
+  input {
+    @extend .base-input;
+  }
+
+  label {
+    @extend .base-label;
+  }
+}
+
+.base-input {
+  height: 3.2rem;
+  width: 100%;
+  padding: 0 1rem;
+
+  color: white;
+  font-weight: normal;
+  font-size: 1rem;
+  background: #241F40;
+  border-radius: 1.563rem;
+  border: 0;
+
+  &::placeholder {
+    color: #3A3559;
+    font-weight: bold;
+    font-size: 0.8rem;
+  }
+
+  &:-ms-input-placeholder {
+    color: #3A3559;
+    font-weight: bold;
+    font-size: 0.8rem;
+  }
+
+  &::-ms-input-placeholder {
+    color: #3A3559;
+    font-weight: bold;
+    font-size: 0.8rem;
+  }
+}
+
+.base-label {
+  display:inline-block;
+
+  margin-bottom: 0.2rem;
+  margin-left: 0.781rem;
+
+  font-size: 0.7rem;
+  color: white;
+  font-weight: bold;
+}

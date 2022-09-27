@@ -1,0 +1,47 @@
+.base-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: .7rem 3rem;
+  min-height: 2.4rem;
+  height: 2.4rem;
+
+  font-size: 1rem;
+  line-height: normal;
+
+  outline: none;
+  border: none;
+  border-radius: 1.563rem;
+
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+
+  transition: transform ease-in-out 200ms;
+  transform: scale(1.001) translateZ(0);
+
+  &:hover, &:active, &:focus {
+    text-decoration: none;
+    transform: scale(1.05);
+  }
+}
+
+.primary-button {
+  @extend .base-button;
+
+  color: white;
+  background-color: #BA46E1;
+
+  app-loading {
+    margin-left: 0.5rem;
+  }
+}
+
+.inverted-button {
+  @extend .base-button;
+
+  background-color: transparent;
+  border: solid 0.1rem #BA46E1;
+  color: #BA46E1;
+}

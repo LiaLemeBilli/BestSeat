@@ -1,0 +1,104 @@
+.register {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+
+  background-color: #121128;
+
+  &--forms {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1;
+
+    padding: 3rem 2rem;
+
+    &--user-image {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      padding-top: 2.5rem;
+
+      input {
+        display: none;
+      }
+
+      img {
+        height: 6rem;
+        width: 6rem;
+        overflow: hidden;
+
+        border-radius: 50%;
+      }
+
+      span {
+        transition: all 0.3s ease-in-out;
+
+        margin-top: 1rem;
+
+        color: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+
+        &:hover {
+          transform: scale(1.1);
+        }
+      }
+    }
+
+    &--data {
+      width: 100%;
+
+      .input-container {
+        margin: 0 auto 1rem auto;
+        max-width: 25rem;
+      }
+    }
+
+    & > p {
+      margin: 1rem 0;
+
+      color: crimson;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+  }
+
+  &--card {
+    min-width: 25vw;
+    padding: 3rem;
+
+    @media (max-width: 768px) {
+      display: none;
+    }
+
+    &--content {
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+
+      width: 100%;
+      height: 100%;
+      border-radius: 1.5rem;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      h5 {
+        position: absolute;
+        padding: 0 1.5rem;
+
+        font-size: 3rem;
+        color: white;
+        font-weight: bold;
+      }
+    }
+  }
+}
