@@ -1,0 +1,45 @@
+<div class="register">
+  <div class="register--forms">
+    <div class="register--forms--user-image">
+      <input #input (change)="selectImage($event)" type="file" accept="image/jpeg, image/png, image/jpg" />
+      <img alt="user-image" [src]="base64UserImage || 'assets/imgs/register-card-image.jpg'"/>
+      <span (click)="input.click()">Editar</span>
+    </div>
+
+    <div class="register--forms--data">
+      <div class="input-container">
+        <label>Nome</label>
+        <input [(ngModel)]="createUser.name" type="text" maxlength="200" placeholder="Digite aqui seu nome" />
+      </div>
+
+      <div class="input-container">
+        <label>E-mail</label>
+        <input [(ngModel)]="createUser.email" type="text" maxlength="200" placeholder="Digite aqui seu email" />
+      </div>
+
+      <div class="input-container">
+        <label>Senha</label>
+        <input [(ngModel)]="createUser.password" type="password" maxlength="20" placeholder="Digite aqui sua senha"/>
+      </div>
+
+      <div class="input-container">
+        <label>Confirmar senha</label>
+        <input [(ngModel)]="createUser.confirmPassword" type="password" maxlength="20" placeholder="Confirme aqui sua senha" />
+      </div>
+    </div>
+
+    <p *ngIf="errorMessage">{{ errorMessage }}</p>
+
+    <button (click)="registerUser()" class="primary-button">
+      Cadastrar
+      <app-loading *ngIf="isRegistering" [size]="20"></app-loading>
+    </button>
+  </div>
+
+  <div class="register--card">
+    <div class="register--card--content">
+      <img alt="card-image" src="assets/imgs/register-card-image.jpg" />
+      <h5>Seja bem vindo a evolução, pronto para decolar?</h5>
+    </div>
+  </div>
+</div>
