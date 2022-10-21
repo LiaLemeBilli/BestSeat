@@ -1,27 +1,42 @@
 # Bestseat
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.2.5.
+BestSeat se trata de um projeto web que tem a proposta de permitir
+que se possa assistir cursos de formas gratuitas. Na plataforma é
+possivel cadastrar novos cursos, e usuarios. Com o cadastro realiazado
+o usuario podera acompanhar seu progresso durante os uso da plaraforma.
 
-## Development server
+## Requisitos
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Para o uso da plataforma é necessario:
+- `node 16`
 
-## Code scaffolding
+## Rodando aplicação
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Certificado que os requisitos estão configurados é necessario
+rodar os seguintes comandos:
+- `npm i` responsavel por instalar todas as dependencias do projeto
+- `ng serve` responsavel por inicializar a aplicação comumente na 
+no link `http://localhost:4200/`
 
-## Build
+## Rodando testes
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Para realizar o testes configurados no projeto basta rodar
+o seguinte comando (teste unitario via [Karma](https://karma-runner.github.io)):
+- `ng test`
+  
+Ultimo teste relizado:
 
-## Running unit tests
+![img.png](img.png)
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Versionamento
 
-## Running end-to-end tests
+O versionamento da aplicações pode ser econtrado nos arquivos
+de environment encontrado na pasta environments `src/environments`
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+A versão é separada em MAJOR, MINOR e PATCH
 
-## Further help
+> - PATCH: Qualquer iteração, algum bug corrigido, alguma otimização.
+> - MINOR: Nova funcionalidade foi adicionada ao software, porém sua proposta básica continua a mesma.
+> - MAJOR: Significa que algo da versão anterior pode “quebrar” na nova versão.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+### Versão 0.6.0

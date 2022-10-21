@@ -1,6 +1,7 @@
 //#region Imports
 
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
@@ -16,7 +17,8 @@ const routes: Routes = [{ path: '', component: RegisterComponent }];
     CommonModule,
     FormsModule,
     RouterModule.forChild(routes),
-    LoadingModule
+    LoadingModule,
+    HttpClientModule
   ],
   declarations: [
     RegisterComponent,
