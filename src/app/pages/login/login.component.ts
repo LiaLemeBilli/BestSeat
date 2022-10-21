@@ -7,10 +7,10 @@ import { UserService } from '../../services/user.service';
 //#endregion
 
 @Component({
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss'],
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
 })
-export class RegisterComponent {
+export class LoginComponent {
 
   //#region Constructors
 
@@ -31,42 +31,25 @@ export class RegisterComponent {
 
   public errorMessage: string = '';
 
-  public base64UserImage: string = '';
-
-  public isRegistering: boolean = false;
+  public isLoading: boolean = false;
 
   //#endregion
 
   //#region Methods
 
-  public selectImage($event: any): void {
-    const file: File = $event.target.files[0];
-
-    const permissionTypes = ['image/png', 'image/jpeg', 'image/jpg'];
-
-    if (!permissionTypes.includes(file.type))
-      return;
-
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      this.base64UserImage = reader.result as string;
-    };
-  }
-
-  public async registerUser(): Promise<void> {
-    if (this.isRegistering)
+  public async loginUser(): Promise<void> {
+    if (this.isLoading)
       return;
 
     try {
-      this.isRegistering = true;
+      this.isLoading = true;
       await this.userService.createUser(this.createUser);
 
       this.errorMessage = '';
     } catch (e: any) {
       this.errorMessage = e.message;
     } finally {
-      this.isRegistering = false;
+      this.isLoading = false;
     }
   }
 

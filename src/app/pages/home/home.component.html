@@ -1,0 +1,43 @@
+<div class="home">
+
+  <div class="home--container">
+    <app-navbar></app-navbar>
+
+    <div class="home--container--content">
+      <div class="home--container--content--header">
+        <app-search-bar-input></app-search-bar-input>
+        <img src="assets/imgs/register-card-image.jpg" class="home--container--content--header--user" alt="user" />
+      </div>
+
+      <div class="home--container--content--banner">
+        <img alt="banner-image" src="assets/imgs/register-card-image.jpg" />
+        <h3>Curso com tecnicas de pintura digital e forma</h3>
+        <button class="primary-button">
+          Ver mais
+        </button>
+      </div>
+
+      <div class="home--container--content--courses">
+        <div class="home--container--content--courses--filters">
+          <div class="filter-tag filter-selected">
+            Todos
+          </div>
+
+          <div class="filter-tag">
+            Artes
+          </div>
+        </div>
+
+        <div class="home--container--content--courses--list">
+          <app-course-card></app-course-card>
+          <app-course-card></app-course-card>
+          <app-course-card></app-course-card>
+          <app-course-card></app-course-card>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="home--footer"></div>
+
+</div>

@@ -2,9 +2,9 @@
 
 import { Injectable } from '@angular/core';
 import { UserInteractor } from '../interactors/user/user.interactor';
-import { CreateUserPayload } from '../models/payload/create-user.payload';
+import { CreateUserPayload } from '../models/payloads/create-user.payload';
 import { UserProxy } from '../models/proxies/user.proxy';
-import { isValidCpf, isValidEmail, isValidPassword } from '../utils/functions';
+import { isValidEmail, isValidPassword } from '../utils/functions';
 
 //#endregion
 
