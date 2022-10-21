@@ -112,7 +112,7 @@
   }
 
   &--card {
-    min-width: 40vw;
+    width: 40vw;
 
     @media (max-width: 768px) {
       display: none;
