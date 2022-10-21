@@ -1,45 +1,43 @@
-<div class="register">
-  <div class="register--forms">
-    <div class="register--forms--user-image">
-      <input #input (change)="selectImage($event)" type="file" accept="image/jpeg, image/png, image/jpg" />
-      <img alt="user-image" [src]="base64UserImage || 'assets/imgs/register-card-image.jpg'"/>
-      <span (click)="input.click()">Editar</span>
-    </div>
+<div class="home">
 
-    <div class="register--forms--data">
-      <div class="input-container">
-        <label>Nome</label>
-        <input [(ngModel)]="createUser.name" type="text" maxlength="200" placeholder="Digite aqui seu nome" />
+  <div class="home--container">
+    <app-navbar></app-navbar>
+
+    <div class="home--container--content">
+      <div class="home--container--content--header">
+        <app-search-bar-input></app-search-bar-input>
+        <img src="assets/imgs/register-card-image.jpg" class="home--container--content--header--user" alt="user" />
       </div>
 
-      <div class="input-container">
-        <label>E-mail</label>
-        <input [(ngModel)]="createUser.email" type="text" maxlength="200" placeholder="Digite aqui seu email" />
+      <div class="home--container--content--banner">
+        <img alt="banner-image" src="assets/imgs/register-card-image.jpg" />
+        <h3>Curso com tecnicas de pintura digital e forma</h3>
+        <button class="primary-button">
+          Ver mais
+        </button>
       </div>
 
-      <div class="input-container">
-        <label>Senha</label>
-        <input [(ngModel)]="createUser.password" type="password" maxlength="20" placeholder="Digite aqui sua senha"/>
+      <div class="home--container--content--courses">
+        <div class="home--container--content--courses--filters">
+          <div class="filter-tag filter-selected">
+            Todos
+          </div>
+
+          <div class="filter-tag">
+            Artes
+          </div>
+        </div>
+
+        <div class="home--container--content--courses--list">
+          <app-course-card></app-course-card>
+          <app-course-card></app-course-card>
+          <app-course-card></app-course-card>
+          <app-course-card></app-course-card>
+        </div>
       </div>
-
-      <div class="input-container">
-        <label>Confirmar senha</label>
-        <input [(ngModel)]="createUser.confirmPassword" type="password" maxlength="20" placeholder="Confirme aqui sua senha" />
-      </div>
-    </div>
-
-    <p *ngIf="errorMessage">{{ errorMessage }}</p>
-
-    <button (click)="registerUser()" class="primary-button">
-      Cadastrar
-      <app-loading *ngIf="isRegistering" [size]="20"></app-loading>
-    </button>
-  </div>
-
-  <div class="register--card">
-    <div class="register--card--content">
-      <img alt="card-image" src="assets/imgs/register-card-image.jpg" />
-      <h5>Seja bem vindo a evolução, pronto para decolar?</h5>
     </div>
   </div>
+
+  <div class="home--footer"></div>
+
 </div>

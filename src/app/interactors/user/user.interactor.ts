@@ -2,7 +2,7 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CreateUserPayload } from '../../models/payload/create-user.payload';
+import { CreateUserPayload } from '../../models/payloads/create-user.payload';
 import { UserProxy } from '../../models/proxies/user.proxy';
 
 //#endregion

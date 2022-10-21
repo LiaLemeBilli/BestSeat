@@ -1,6 +1,12 @@
 <div class="register">
   <div class="register--forms">
+
     <div class="register--forms--user-image">
+      <div [routerLink]="'/login'" class="register--forms--user-image--arrow">
+        <img alt="arrow" src="assets/icons/arrow-back.svg" />
+        Voltar
+      </div>
+
       <input #input (change)="selectImage($event)" type="file" accept="image/jpeg, image/png, image/jpg" />
       <img alt="user-image" [src]="base64UserImage || 'assets/imgs/register-card-image.jpg'"/>
       <span (click)="input.click()">Editar</span>

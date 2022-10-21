@@ -1,7 +1,7 @@
 //#region Imports
 
 import { Component } from '@angular/core';
-import { CreateUserPayload } from '../../models/payload/create-user.payload';
+import { CreateUserPayload } from '../../models/payloads/create-user.payload';
 import { UserService } from '../../services/user.service';
 
 //#endregion

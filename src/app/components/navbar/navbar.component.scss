@@ -1,0 +1,54 @@
+.navbar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  background: #241F40;
+  border-radius: 1.2rem;
+  width: 4rem;
+  height: 25rem;
+
+  &--list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+    padding: 0.8rem;
+    gap: 0.8rem;
+  }
+
+  &--fixed {
+    padding: 0.8rem;
+  }
+}
+
+.button-menu {
+  transition: all 0.3s ease-in-out;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  background: linear-gradient(180deg, #3C3659 0%, #282242 100%);
+  width: 2.5rem;
+  height: 2.5rem;
+
+  border-radius: 0.7rem;
+
+  &:hover {
+    transform: scale(1.1);
+
+    img {
+      transition: all 0.3s ease-in-out;
+
+      opacity: 1;
+    }
+  }
+
+  img {
+    width: 1.2rem;
+    opacity: 0.6;
+  }
+}

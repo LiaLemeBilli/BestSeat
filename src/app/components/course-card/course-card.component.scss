@@ -1,0 +1,52 @@
+:host {
+  height: 11rem;
+  width: 100%;
+}
+
+.course-card {
+  transition: all 0.3s ease-in-out;
+  position: relative;
+  isolation: isolate;
+  cursor: pointer;
+
+  width: 100%;
+  height: 100%;
+
+  border-radius: 1.2rem;
+  overflow: hidden;
+
+  &:hover {
+    transform: scale(1.01);
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &--information {
+    position: absolute;
+
+    right: 0.8rem;
+    left: 0.8rem;
+    bottom: 0.8rem;
+    padding: 1rem;
+    background-color: #1D1933;
+    border-radius: 1rem;
+
+    h5 {
+      font-size: 1rem;
+
+      color: white;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    h6 {
+      color: #C61F79;
+      font-size: 0.9rem;
+    }
+  }
+}
