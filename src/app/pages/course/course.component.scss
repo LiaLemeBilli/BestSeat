@@ -1,0 +1,232 @@
+:host {
+  display: flex;
+
+  width: 100vw;
+  height: 100vh;
+
+  background-color: #121128;
+}
+
+.navbar {
+  padding: 2.5rem 0 0 2.5rem;
+}
+
+.course {
+  padding: 2.5rem 2rem 2rem 2rem;
+  overflow: auto;
+  flex: 1;
+
+  &--title {
+    display: flex;
+    justify-content: space-between;
+
+    h5 {
+      position: relative;
+
+      width: 30%;
+      padding-top: 0.9rem;
+      margin-bottom: 2rem;
+
+      font-size: 1.7rem;
+      font-weight: bold;
+      color: white;
+
+      &:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        width: 16%;
+        height: 0.3rem;
+        background-color: white;
+      }
+    }
+
+    img {
+      width: 3.2rem;
+      height: 3.2rem;
+
+      border-radius: 0.7rem;
+      object-fit: cover;
+      border: solid #BA46E1 0.2rem;
+    }
+  }
+
+  &--content {
+    display: flex;
+    width: 100%;
+
+    &--lesson {
+      width: 70%;
+
+      iframe {
+        width: 100%;
+        height: 32vw;
+      }
+
+      &--name {
+        margin: 0.6rem 0;
+
+        color: white;
+        font-size: 1.4rem;
+        font-weight: bold;
+      }
+    }
+
+    &--modules {
+      display: flex;
+      width: 30%;
+
+      &--progress {
+        margin: 0 1rem;
+
+        .progress {
+          position: relative;
+          display: flex;
+          justify-content: center;
+
+          height: 2.8rem;
+          width: 2.8rem;
+          margin-bottom: 0.3rem;
+
+          &:after {
+            position: absolute;
+            content: "";
+            top: 1.3rem;
+            width: 0.25rem;
+            height: 3rem;
+            background-color: #777777;
+          }
+
+          &--point {
+            height: 1rem;
+            width: 1rem;
+            z-index: 1;
+            margin: auto;
+
+            border-radius: 50%;
+            background-color: #777777;
+          }
+        }
+
+        .hidden-progress {
+          &:after {
+            visibility: hidden;
+          }
+        }
+
+        .progress-lesson-list-show {
+          height: auto !important;
+          overflow: initial !important;
+        }
+
+        .progress-lesson-list {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          height: 0;
+          overflow: hidden;
+
+          .hidden-less {
+            &:after {
+              visibility: hidden;
+            }
+          }
+
+          .less {
+            display: flex;
+            justify-content: center;
+            position: relative;
+
+            height: 2.3rem;
+            width: 2.3rem;
+            margin-bottom: 0.3rem;
+
+            &:after {
+              position: absolute;
+              content: "";
+              top: 1.15rem;
+              width: 0.25rem;
+              height: 3rem;
+              background-color: #777777;
+            }
+
+            &--point {
+              height: 0.6rem;
+              width: 0.6rem;
+              margin: auto;
+
+              border-radius: 50%;
+              background-color: #777777;
+            }
+          }
+        }
+      }
+
+      &--options {
+        width: 100%;
+
+        .option {
+          width: 100%;
+
+          .selected-option {
+            color: #006494 !important;
+          }
+
+          h4 {
+            transition: all 0.3s ease-in-out;
+
+            width: 100%;
+            height: 2.8rem;
+            padding: 0 1.1rem;
+            margin-bottom: 0.3rem;
+            cursor: pointer;
+
+            color: #999999;
+            line-height: 2.8rem;
+            border-radius: 0.4rem;
+            background-color: #1D1933;
+            font-weight: bold;
+
+            &:hover {
+              transform: scale(1.05);
+            }
+          }
+
+          &--lessons {
+            height: 0;
+            overflow: hidden;
+
+            .selected-lesson {
+              color: #006494 !important;
+            }
+
+            .lesson {
+              transition: all 0.3s ease-in-out;
+
+              height: 2.3rem;
+              padding: 0 1.1rem;
+              margin-left: 1.1rem;
+              margin-bottom: 0.3rem;
+
+              color: #999999;
+              line-height: 2.3rem;
+              border-radius: 0.4rem;
+              background-color: #1D1933;
+              font-weight: bold;
+              cursor: pointer;
+
+              &:hover {
+                transform: scale(1.05);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.show {
+  height: auto !important;
+}

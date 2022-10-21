@@ -2,8 +2,9 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { HalfCircleSpinnerModule } from 'angular-epic-spinners';
-import { LoadingComponent } from './loading.component';
+import { SearchBarInputComponent } from './search-bar-input.component';
 
 //#endregion
 
@@ -11,12 +12,13 @@ import { LoadingComponent } from './loading.component';
   imports: [
     CommonModule,
     HalfCircleSpinnerModule,
+    FormsModule,
   ],
   declarations: [
-    LoadingComponent,
+    SearchBarInputComponent,
   ],
   exports: [
-    LoadingComponent,
+    SearchBarInputComponent,
   ],
 })
-export class LoadingModule {}
+export class SearchBarInputModule {}

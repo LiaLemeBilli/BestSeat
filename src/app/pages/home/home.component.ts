@@ -7,10 +7,10 @@ import { UserService } from '../../services/user.service';
 //#endregion
 
 @Component({
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss'],
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss'],
 })
-export class RegisterComponent {
+export class HomeComponent {
 
   //#region Constructors
 

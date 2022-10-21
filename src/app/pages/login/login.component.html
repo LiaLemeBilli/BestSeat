@@ -1,0 +1,37 @@
+<div class="login">
+  <div class="login--forms">
+
+    <div [routerLink]="'/home'" class="login--forms--arrow">
+      <img alt="arrow" src="assets/icons/arrow-back.svg" />
+      Voltar
+    </div>
+
+    <div class="login--forms--data">
+      <div class="input-container">
+        <label>E-mail</label>
+        <input [(ngModel)]="createUser.email" type="text" maxlength="200" placeholder="Digite aqui seu email" />
+      </div>
+
+      <div class="input-container">
+        <label>Senha</label>
+        <input [(ngModel)]="createUser.password" type="password" maxlength="20" placeholder="Digite aqui sua senha"/>
+      </div>
+    </div>
+
+    <p *ngIf="errorMessage">{{ errorMessage }}</p>
+
+    <button (click)="loginUser()" class="primary-button">
+      Entrar
+      <app-loading *ngIf="isLoading" [size]="20"></app-loading>
+    </button>
+
+    <span [routerLink]="'/login'">Cadastrar-se</span>
+  </div>
+
+  <div class="login--card">
+    <div class="login--card--content">
+      <img alt="card-image" src="assets/imgs/register-card-image.jpg" />
+      <h5>Bem vindo de volta, seu lugar está pronto para você</h5>
+    </div>
+  </div>
+</div>
