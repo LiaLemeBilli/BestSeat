@@ -1,0 +1,58 @@
+<div class="navbar">
+  <app-navbar></app-navbar>
+</div>
+
+<div class="course">
+  <div class="course--title">
+    <h5>{{ course.title }}</h5>
+    <img src="assets/imgs/register-card-image.jpg" alt="user" />
+  </div>
+
+  <div class="course--content">
+    <div class="course--content--lesson">
+      <iframe src="https://www.youtube.com/embed/LXb3EKWsInQ?controls=0"
+              title="YouTube video player" frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen>
+      </iframe>
+      <div class="course--content--lesson--name">
+        {{ currentLesson.title }}
+      </div>
+    </div>
+
+    <div class="course--content--modules">
+      <div class="course--content--modules--progress">
+        <ng-container *ngFor="let module of modules; let i = index">
+          <div class="progress"
+               [class.hidden-progress]="selectedModule?.id !== module.id && i === modules.length - 1">
+            <div class="progress--point"></div>
+          </div>
+          <div class="progress-lesson-list"
+               [class.progress-lesson-list-show]="selectedModule?.id === module.id">
+            <div class="less"
+                 *ngFor="let lesson of module.lessons; let j = index"
+                 [class.hidden-less]="i === modules.length - 1 && j === module.lessons.length - 1">
+              <div class="less--point"></div>
+            </div>
+          </div>
+        </ng-container>
+
+      </div>
+      <div class="course--content--modules--options">
+        <div *ngFor="let module of modules" class="option">
+          <h4 (click)="selectModule(module)"
+              [class.selected-option]="selectedModule?.id === module.id">
+            {{ module.title }}
+          </h4>
+          <div class="option--lessons" [class.show]="selectedModule?.id === module.id">
+            <div (click)="selectedLesson = lesson"
+                 [class.selected-lesson]="selectedLesson?.id === lesson.id"
+                 *ngFor="let lesson of module.lessons" class="lesson">
+              {{ lesson.title }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

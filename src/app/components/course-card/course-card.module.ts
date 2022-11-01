@@ -2,8 +2,10 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { HalfCircleSpinnerModule } from 'angular-epic-spinners';
-import { LoadingComponent } from './loading.component';
+import { CourseCardComponent } from './course-card.component';
 
 //#endregion
 
@@ -11,12 +13,14 @@ import { LoadingComponent } from './loading.component';
   imports: [
     CommonModule,
     HalfCircleSpinnerModule,
+    FormsModule,
+    RouterModule,
   ],
   declarations: [
-    LoadingComponent,
+    CourseCardComponent,
   ],
   exports: [
-    LoadingComponent,
+    CourseCardComponent,
   ],
 })
-export class LoadingModule {}
+export class CourseCardModule {}

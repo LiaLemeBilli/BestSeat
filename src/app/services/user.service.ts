@@ -1,10 +1,13 @@
 //#region Imports
 
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { UserInteractor } from '../interactors/user/user.interactor';
-import { CreateUserPayload } from '../models/payload/create-user.payload';
+import { CreateUserPayload } from '../models/payloads/create-user.payload';
+import { UserLoginPayload } from '../models/payloads/user-login.payload';
 import { UserProxy } from '../models/proxies/user.proxy';
-import { isValidCpf, isValidEmail, isValidPassword } from '../utils/functions';
+import { isValidEmail, isValidPassword } from '../utils/functions';
+import { StorageService } from './storage.service';
 
 //#endregion
 
@@ -17,17 +20,26 @@ export class UserService {
 
   constructor(
     private readonly interactor: UserInteractor,
-  ) {
-
-  }
+    private readonly storageService: StorageService
+  ) {}
 
   //#endregion
 
-  //#region Public Properties
+  //#region Private Properties
+
+  private readonly user$: BehaviorSubject<UserProxy | undefined> = new BehaviorSubject<UserProxy | undefined>(void 0);
 
   //#endregion
 
   //#region Public Methods
+
+  public getCurrentUser$(): Observable<UserProxy | undefined> {
+    return this.user$.asObservable();
+  }
+
+  public setCurrentUser(user: UserProxy | undefined): void {
+    this.user$.next(user);
+  }
 
   public async createUser(payload: CreateUserPayload): Promise<UserProxy | undefined> {
     if (payload.name === '')
@@ -43,6 +55,40 @@ export class UserService {
       throw new Error('As senhas devem ser iguais.');
 
     return await this.interactor.createUser(payload);
+  }
+
+  public async login(payload: UserLoginPayload): Promise<UserProxy | undefined> {
+    if (!isValidEmail(payload.email))
+      throw new Error('Email invalido.');
+
+    if (!isValidPassword(payload.password))
+      throw new Error('Senha invalida.');
+
+    const user: UserProxy = {
+      name: 'Higor Lins',
+      email: payload.email,
+      id: 1,
+    }
+
+    await this.interactor.login(payload);
+    this.storageService.setItem<UserProxy>('USER', user);
+    this.setCurrentUser(user);
+
+    return user;
+  }
+
+  public getCurrentUser(): UserProxy | undefined {
+    const user = this.storageService.getItem<UserProxy>('USER');
+
+    if (user.success)
+      return user.success;
+
+    return undefined;
+  }
+
+  public logout(): void {
+    this.storageService.clear();
+    this.setCurrentUser(undefined);
   }
 
   //#endregion

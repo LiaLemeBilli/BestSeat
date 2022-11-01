@@ -1,0 +1,155 @@
+.home {
+  width: 100vw;
+  height: 100vh;
+
+  overflow: auto;
+  background-color: #121128;
+
+  &--container {
+    width: 100%;
+    display: flex;
+
+    app-navbar {
+      padding: 2.5rem 0 0 2.5rem;
+    }
+
+    &--content {
+      flex: 1;
+      overflow: hidden;
+      padding: 2.5rem 7.5rem 2.5rem 2.5rem;
+
+      @media (max-width: 768px) {
+        padding: 1.2rem !important;
+      }
+
+      &--header {
+        display: flex;
+        justify-content: space-between;
+
+        width: calc(100% + 5rem);
+        margin-bottom: 2.5rem;
+
+        @media (max-width: 768px) {
+          width: 100%;
+        }
+
+        app-search-bar-input {
+          width: 60%;
+        }
+
+        img {
+          width: 3.2rem;
+          height: 3.2rem;
+
+          border-radius: 0.7rem;
+          object-fit: cover;
+          border: solid #BA46E1 0.2rem;
+        }
+      }
+
+      &--banner {
+        position: relative;
+        isolation: isolate;
+
+        width: 100%;
+        overflow: hidden;
+        padding: 1.5rem 2.5rem;
+        border-radius: 1rem;
+
+        img {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          z-index: -1;
+          isolation: auto;
+          object-fit: cover;
+        }
+
+        h3 {
+          width: 70%;
+          margin-bottom: 1.2rem;
+
+          font-size: 2.5rem;
+          color: white;
+          z-index: 1;
+
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          line-clamp: 2;
+          -webkit-box-orient: vertical;
+
+          @media (max-width: 768px) {
+            width: 100%;
+          }
+        }
+      }
+
+      &--courses {
+        &--filters {
+          display: flex;
+          gap: 0.3rem;
+          overflow: auto;
+
+          margin: 1rem 0.5rem;
+          padding-bottom: 0.4rem;
+
+          &::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+            background: transparent;
+          }
+
+          &::-webkit-scrollbar-thumb {
+            background: white 0 0 no-repeat padding-box;
+            border-radius: 1rem;
+          }
+
+          .filter-tag {
+            width: min-content;
+            height: auto;
+
+            padding: 0.8rem;
+            border-radius: 1rem;
+
+            color: #474662;
+            cursor: pointer;
+            border: solid #474662 0.1rem;
+          }
+
+          .filter-selected {
+            color: white !important;
+            cursor: unset !important;
+            background-color: #474662;;
+          }
+        }
+
+        &--list {
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+
+          gap: 2.5rem;
+
+          @media (max-width: 1600px) {
+            grid-template-columns: repeat(4, 1fr);
+          }
+
+          @media (max-width: 1300px) {
+            grid-template-columns: repeat(3, 1fr);
+          }
+
+          @media (max-width: 1000px) {
+            grid-template-columns: repeat(2, 1fr);
+          }
+
+          @media (max-width: 768px) {
+            grid-template-columns: repeat(1, 1fr);
+          }
+        }
+      }
+    }
+  }
+}

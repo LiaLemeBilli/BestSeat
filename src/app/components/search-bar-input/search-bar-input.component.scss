@@ -1,0 +1,48 @@
+:host {
+  position: relative;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+
+  width: auto;
+  height: auto;
+
+  img {
+    position: absolute;
+    left: 1rem;
+    height: 2rem;
+  }
+
+  input {
+    height: 3.2rem;
+    width: 100%;
+    padding: 0 1rem 0 4rem;
+
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    background: #241F40;
+    border-radius: 1.4rem;
+    border: 0;
+
+    &::placeholder {
+      color: #3A3559;
+      font-weight: bold;
+      font-size: 0.8rem;
+    }
+
+    &:-ms-input-placeholder {
+      color: #3A3559;
+      font-weight: bold;
+      font-size: 0.8rem;
+    }
+
+    &::-ms-input-placeholder {
+      color: #3A3559;
+      font-weight: bold;
+      font-size: 0.8rem;
+    }
+  }
+}

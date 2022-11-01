@@ -1,7 +1,8 @@
 //#region Imports
 
-import { Component } from '@angular/core';
-import { CreateUserPayload } from '../../models/payload/create-user.payload';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { CreateUserPayload } from '../../models/payloads/create-user.payload';
 import { UserService } from '../../services/user.service';
 
 //#endregion
@@ -10,11 +11,12 @@ import { UserService } from '../../services/user.service';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
 
   //#region Constructors
 
   constructor(
+    private readonly router: Router,
     private readonly userService: UserService,
   ) { }
 
@@ -26,7 +28,8 @@ export class RegisterComponent {
     name: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    imageUrl: '',
+    confirmPassword: '',
   }
 
   public errorMessage: string = '';
@@ -38,6 +41,15 @@ export class RegisterComponent {
   //#endregion
 
   //#region Methods
+
+  public async ngOnInit(): Promise<void> {
+    try {
+      const user = await this.userService.getCurrentUser();
+
+      if (user)
+        await this.router.navigateByUrl('\home');
+    } finally {}
+  }
 
   public selectImage($event: any): void {
     const file: File = $event.target.files[0];
@@ -60,7 +72,12 @@ export class RegisterComponent {
 
     try {
       this.isRegistering = true;
+
+      // this.createUser.imageUrl = this.base64UserImage;
       await this.userService.createUser(this.createUser);
+
+      await this.userService.login({ email: this.createUser.email, password: this.createUser.password });
+      await this.router.navigateByUrl('\home');
 
       this.errorMessage = '';
     } catch (e: any) {

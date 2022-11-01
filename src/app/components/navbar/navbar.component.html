@@ -1,0 +1,18 @@
+<div class="navbar">
+  <div class="navbar--list">
+    <div [routerLink]="'/home'" class="button-menu">
+      <img alt="icon" src="assets/icons/home.svg" />
+    </div>
+    <div [routerLink]="'/home'" class="button-menu">
+      <img alt="icon" src="assets/icons/user.svg" />
+    </div>
+    <div [routerLink]="'/home'" class="button-menu">
+      <img alt="icon" src="assets/icons/back-two-arrows.svg" />
+    </div>
+  </div>
+  <div class="navbar--fixed">
+    <div (click)="logoutOrLoginUser()" class="button-menu">
+      <img [class.rotate]="!isUserLogged" alt="icon" src="assets/icons/log-out.svg" />
+    </div>
+  </div>
+</div>

@@ -15,7 +15,7 @@ import { RegisterModule } from './pages/register/register.module';
     BrowserModule,
     AppRoutingModule,
     RegisterModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: BaseUrlInterceptor, multi: true },
