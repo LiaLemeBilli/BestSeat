@@ -187,6 +187,9 @@
             border-radius: 0.4rem;
             background-color: #1D1933;
             font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
 
             &:hover {
               transform: scale(1.05);

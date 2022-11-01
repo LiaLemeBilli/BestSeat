@@ -1,7 +1,9 @@
 //#region Imports
 
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { CreateUserPayload } from '../../models/payloads/create-user.payload';
+import { UserProxy } from '../../models/proxies/user.proxy';
 import { UserService } from '../../services/user.service';
 
 //#endregion
@@ -10,64 +12,44 @@ import { UserService } from '../../services/user.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent {
+export class HomeComponent implements OnDestroy, OnInit {
 
   //#region Constructors
 
   constructor(
     private readonly userService: UserService,
-  ) { }
+  ) {
+    this.userSubscription = this.userService.getCurrentUser$().subscribe(user => {
+      this.user = user;
+
+      if (this.user)
+        this.isLogged = true;
+    })
+  }
 
   //#endregion
 
   //#region Properties
 
-  public createUser: CreateUserPayload = {
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-  }
+  public user: UserProxy | undefined = undefined;
 
-  public errorMessage: string = '';
+  public isLogged: boolean = false;
 
-  public base64UserImage: string = '';
-
-  public isRegistering: boolean = false;
+  private userSubscription: Subscription;
 
   //#endregion
 
   //#region Methods
 
-  public selectImage($event: any): void {
-    const file: File = $event.target.files[0];
+  public ngOnInit(): void {
+    this.user = this.userService.getCurrentUser();
 
-    const permissionTypes = ['image/png', 'image/jpeg', 'image/jpg'];
-
-    if (!permissionTypes.includes(file.type))
-      return;
-
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      this.base64UserImage = reader.result as string;
-    };
+    if (this.user)
+      this.isLogged = true;
   }
 
-  public async registerUser(): Promise<void> {
-    if (this.isRegistering)
-      return;
-
-    try {
-      this.isRegistering = true;
-      await this.userService.createUser(this.createUser);
-
-      this.errorMessage = '';
-    } catch (e: any) {
-      this.errorMessage = e.message;
-    } finally {
-      this.isRegistering = false;
-    }
+  public ngOnDestroy(): void {
+    this.userSubscription?.unsubscribe();
   }
 
   //#endregion

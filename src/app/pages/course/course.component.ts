@@ -1,6 +1,7 @@
 //#region Imports
 
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 
 //#endregion
@@ -9,11 +10,12 @@ import { UserService } from '../../services/user.service';
   templateUrl: './course.component.html',
   styleUrls: ['./course.component.scss'],
 })
-export class CourseComponent {
+export class CourseComponent implements OnInit {
 
   //#region Constructors
 
   constructor(
+    private readonly router: Router,
     private readonly userService: UserService,
   ) { }
 
@@ -89,6 +91,15 @@ export class CourseComponent {
   //#endregion
 
   //#region Methods
+
+  public async ngOnInit(): Promise<void> {
+    try {
+      const user = await this.userService.getCurrentUser();
+
+      if (!user)
+        await this.router.navigateByUrl('\home');
+    } finally {}
+  }
 
   public selectModule(module: any): void {
     if (this.selectedModule === module) {

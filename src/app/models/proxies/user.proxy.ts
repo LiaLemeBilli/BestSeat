@@ -1,5 +1,5 @@
 export interface UserProxy {
-  id: string;
+  id: number;
   email: string;
   name: string;
 }

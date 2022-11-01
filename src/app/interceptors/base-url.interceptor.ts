@@ -14,7 +14,7 @@ export class BaseUrlInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     request = request.clone({
-      url: `https://apiasergerada/${ request.url }`,
+      url: `https://api-nestjs-bestseat.herokuapp.com/${ request.url }`,
     });
 
     return next.handle(request);

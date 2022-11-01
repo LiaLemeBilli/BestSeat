@@ -6,7 +6,7 @@
     <div class="home--container--content">
       <div class="home--container--content--header">
         <app-search-bar-input></app-search-bar-input>
-        <img src="assets/imgs/register-card-image.jpg" class="home--container--content--header--user" alt="user" />
+        <img *ngIf="isLogged" src="assets/imgs/register-card-image.jpg" class="home--container--content--header--user" alt="user" />
       </div>
 
       <div class="home--container--content--banner">
