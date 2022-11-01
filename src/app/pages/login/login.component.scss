@@ -18,6 +18,20 @@
 
     padding: 3rem 2rem;
 
+    span {
+      transition: all 0.3s ease-in-out;
+
+      margin-top: 1rem !important;
+
+      color: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+
+      &:hover {
+        transform: scale(1.1);
+        font-weight: bold;
+      }
+    }
+
     &--arrow {
       display: flex;
       gap: 1rem;
@@ -62,19 +76,6 @@
 
         border-radius: 1.5rem;
         border: solid #BA46E1 0.2rem;
-      }
-
-      span {
-        transition: all 0.3s ease-in-out;
-
-        margin-top: 1rem;
-
-        color: rgba(255, 255, 255, 0.5);
-        cursor: pointer;
-
-        &:hover {
-          transform: scale(1.1);
-        }
       }
     }
 

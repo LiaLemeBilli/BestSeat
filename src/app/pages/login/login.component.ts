@@ -1,7 +1,9 @@
 //#region Imports
 
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { CreateUserPayload } from '../../models/payloads/create-user.payload';
+import { UserLoginPayload } from '../../models/payloads/user-login.payload';
 import { UserService } from '../../services/user.service';
 
 //#endregion
@@ -10,11 +12,12 @@ import { UserService } from '../../services/user.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
   //#region Constructors
 
   constructor(
+    private readonly router: Router,
     private readonly userService: UserService,
   ) { }
 
@@ -22,11 +25,9 @@ export class LoginComponent {
 
   //#region Properties
 
-  public createUser: CreateUserPayload = {
-    name: '',
+  public userLogin: UserLoginPayload = {
     email: '',
     password: '',
-    confirmPassword: ''
   }
 
   public errorMessage: string = '';
@@ -37,15 +38,26 @@ export class LoginComponent {
 
   //#region Methods
 
+  public async ngOnInit(): Promise<void> {
+    try {
+      const user = await this.userService.getCurrentUser();
+
+      if (user)
+        await this.router.navigateByUrl('\home');
+    } finally {}
+  }
+
   public async loginUser(): Promise<void> {
     if (this.isLoading)
       return;
 
     try {
       this.isLoading = true;
-      await this.userService.createUser(this.createUser);
-
+      const user = await this.userService.login(this.userLogin);
       this.errorMessage = '';
+
+      if (user)
+        await this.router.navigateByUrl('\home');
     } catch (e: any) {
       this.errorMessage = e.message;
     } finally {
