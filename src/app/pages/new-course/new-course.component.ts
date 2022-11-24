@@ -1,6 +1,7 @@
 //#region Imports
 
 import { Component, OnInit } from '@angular/core';
+import { Ngxalert } from 'ngx-dialogs';
 import { ToastrService } from 'ngx-toastr';
 import {
   creationRecordButton,
@@ -55,6 +56,8 @@ export class NewCourseComponent implements OnInit {
 
   public courseIdToEdit: number = 0;
 
+  public alertDialog: Ngxalert = new Ngxalert;
+
   public creationStatusEnum: typeof CreationStatusEnum = CreationStatusEnum;
 
   public creationStatus: CreationStatusEnum = CreationStatusEnum.TO_CREATE;
@@ -101,10 +104,10 @@ export class NewCourseComponent implements OnInit {
 
         newModule.lessons = newModule.lessons?.map(lesson => {
           return lesson as LessonPayload;
-        });
+        }) || [];
 
         return newModule;
-      });
+      }) || [];
 
       this.course = course;
     } catch (e: any) {
@@ -129,19 +132,66 @@ export class NewCourseComponent implements OnInit {
   }
 
   public removeClass(moduleIndex: number, classIndex: number): void {
-    if (this.course.modules) {
-      const newModule = this.course.modules[moduleIndex];
+    this.alertDialog.create({
+      title: 'Deseja remover essa aula?',
+      message: 'Atenção, essa ação não poderá ser desfeita.',
+      customCssClass: 'dialog-class',
+      buttons : [
+        {
+          title : 'Remover',
+          class: 'dialog-class--default',
+          event : () => {
+            if (this.course.modules) {
+              const newModule = this.course.modules[moduleIndex];
 
-      if (newModule.lessons)
-        newModule.lessons.splice(classIndex, 1);
+              if (newModule.lessons)
+                newModule.lessons.splice(classIndex, 1);
 
-      this.course.modules[moduleIndex] = newModule;
-    }
+              this.course.modules[moduleIndex] = newModule;
+            }
+
+            this.alertDialog.removeAlert('alert');
+          }
+        },
+        {
+          title : 'Cancelar',
+          class: 'dialog-class--cancel',
+          event : () => {
+            this.alertDialog.removeAlert('alert');
+          }
+        },
+      ]
+    });
   }
 
   public removeModule(moduleIndex: number): void {
-    if (this.course.modules && this.course.modules[moduleIndex])
-      this.course.modules?.splice(moduleIndex, 1);
+    this.alertDialog.create({
+      id: 'alert',
+      title: 'Deseja remover esse modulo?',
+      message: 'Atenção, essa ação não poderá ser desfeita.',
+      customCssClass: 'dialog-class',
+      strict: true,
+      type:'M',
+      buttons : [
+        {
+          title : 'Remover',
+          class: 'dialog-class--cancel',
+          event : () => {
+            if (this.course.modules && this.course.modules[moduleIndex])
+              this.course.modules?.splice(moduleIndex, 1);
+
+            this.alertDialog.removeAlert('alert');
+          }
+        },
+        {
+          title : 'Cancelar',
+          class: 'dialog-class--confirm',
+          event : () => {
+            this.alertDialog.removeAlert('alert');
+          }
+        },
+      ]
+    });
   }
 
   public trackBy(index: number, value: any) {
@@ -153,7 +203,74 @@ export class NewCourseComponent implements OnInit {
   }
 
   public async createOrUpdateCourse(): Promise<void> {
-    this.toastrService.success('Curso criado com sucesso!');
+    try {
+      this.isCreatingOrEditing = true;
+
+      this.checkInvalidDataInPayload();
+
+      if (this.creationStatus === CreationStatusEnum.CREATING) {
+        await this.courseService.create(this.course);
+
+        this.toastrService.success('Curso criado com sucesso!');
+      }
+
+      if (this.creationStatus === CreationStatusEnum.UPDATING) {
+        await this.courseService.update(this.courseIdToEdit, this.course);
+
+        this.toastrService.success('Curso atualizado com sucesso!');
+      }
+
+      this.course = {
+        author: '',
+        modules: [],
+        name: '',
+        description: '',
+        category: ''
+      }
+
+      await this.loadCourses();
+    } catch (e: any) {
+      this.toastrService.error(e.message);
+    } finally {
+      this.isCreatingOrEditing = false;
+    }
+  }
+
+  public checkInvalidDataInPayload(): void {
+    if (this.course.name.length === 0)
+      throw new Error('É necessário definir o nome do curso.');
+
+    if (this.course.description.length === 0)
+      throw new Error('É necessário definir a descrição do curso.');
+
+    if (this.course.category === '')
+      throw new Error('É necessário definir a categoria do curso.');
+
+    if (!this.course.modules || this.course.modules.length === 0)
+      throw new Error('É necessário enviar os modulos do curso.');
+
+    if (this.course.modules) {
+      this.course.modules.forEach((module, moduleIndex) => {
+        if (module.title === '')
+          throw new Error('É necessário enviar o titulo do modulo ' + moduleIndex + '.' );
+
+        if (!module.lessons || module.lessons.length === 0)
+          throw new Error('É necessário enviar as aulas do modulo ' + moduleIndex + '.' );
+
+        if (module.lessons) {
+          module.lessons.forEach((lesson, index) => {
+            if (lesson.name.length === 0)
+              throw new Error('É necessário enviar o nome da aula ' + index + 'presente no modulo '+ moduleIndex + '.' );
+
+            if (lesson.description.length === 0)
+              throw new Error('É necessário enviar a descrição da aula ' + index + 'presente no modulo '+ moduleIndex + '.' );
+
+            if (lesson.contentUrl.length === 0)
+              throw new Error('É necessário enviar a url da aula ' + index + 'presente no modulo '+ moduleIndex + '.' );
+          });
+        }
+      })
+    }
   }
 
   public disableStatus(): void {

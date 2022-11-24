@@ -38,3 +38,80 @@ body {
   pointer-events: none;
   opacity: 0.7;
 }
+
+.base-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: .7rem 3rem !important;
+  min-height: 2.4rem !important;
+  height: 2.4rem !important;
+  margin-left: 0.3rem !important;
+
+  font-size: 1rem !important;
+  line-height: normal;
+
+  outline: none !important;
+  border: none !important;
+  border-radius: 1.1rem !important;
+
+  font-weight: bold !important;
+  color: white;
+  cursor: pointer;
+
+  transition: transform ease-in-out 200ms;
+  transform: scale(1.001) translateZ(0);
+
+  &:hover, &:active, &:focus {
+    text-decoration: none;
+    transform: scale(1.05);
+  }
+}
+
+.dialog-class {
+
+  &--confirm {
+    @extend .base-button;
+
+    color: white;
+    background-color: #BA46E1 !important;
+  }
+
+  &--cancel {
+    @extend .base-button;
+
+    color: white;
+    background-color: red !important;
+  }
+
+  &--default {
+    @extend .base-button;
+
+    color: white;
+  }
+
+  .ngx-dialog-content {
+    background-color: #121128 !important;
+    border-radius: 22px !important;
+
+    .ngx-dialog-footer {
+      margin: 1rem 0 0 0 !important;
+      padding: 0 !important;
+    }
+
+    .ngx-dialog-header {
+      h4 {
+        color: white !important;
+        font-size: 1.3rem;
+        font-weight: bold;
+        border-bottom: none !important;
+      }
+    }
+
+    .ngx-dialog-body {
+      color: white !important;
+      font-weight: normal;
+    }
+  }
+}

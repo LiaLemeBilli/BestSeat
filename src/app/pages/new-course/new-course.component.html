@@ -103,8 +103,10 @@
                     <div class="classes--name-option">
                       <span>{{ c + ' - ' + (mClass.name || 'Sem nome') }}</span>
                       <div class="classes--name-option--options">
-                        <img (click)="removeClass(m, c)" alt="icon" src="assets/icons/back-two-arrows.svg" />
-                        <img (click)="mClass.isOpened = !mClass.isOpened" alt="icon" src="assets/icons/back-two-arrows.svg" />
+                        <img (click)="removeClass(m, c)" alt="icon" src="assets/icons/trash.svg" />
+                        <img (click)="mClass.isOpened = !mClass.isOpened"
+                             alt="icon"
+                             [src]="mClass.isOpened ? 'assets/icons/arrow-up.svg' : 'assets/icons/arrow-down.svg'" />
                       </div>
                     </div>
 
