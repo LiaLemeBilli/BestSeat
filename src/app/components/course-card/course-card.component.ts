@@ -14,13 +14,13 @@ export class CourseCardComponent {
   //#region Public Methods
 
   @Input()
-  public backgroundImage: string = 'assets/imgs/register-card-image.jpg';
+  public backgroundImage: string = '';
 
   @Input()
-  public courseName: string = 'Curso com tecnicas de pintura digital e forma';
+  public courseName: string = '';
 
   @Input()
-  public tagName: string = 'Artes';
+  public tagName: string = '';
 
   //#endregion
 

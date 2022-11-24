@@ -1,5 +1,4 @@
 <div class="home">
-
   <div class="home--container">
     <app-navbar></app-navbar>
 
@@ -10,9 +9,12 @@
       </div>
 
       <div class="home--container--content--banner">
-        <img alt="banner-image" src="assets/imgs/register-card-image.jpg" />
-        <h3>Curso com tecnicas de pintura digital e forma</h3>
-        <button class="primary-button">
+        <img #img alt="banner-image"
+             [src]="this.highlightedCourse.imageUrl || 'assets/imgs/register-card-image.jpg'"
+             (error)="img.src = 'assets/imgs/register-card-image.jpg'"
+        />
+        <h3>{{ this.highlightedCourse.name }}</h3>
+        <button [routerLink]="'/course/' + this.highlightedCourse?.id" class="primary-button">
           Ver mais
         </button>
       </div>
@@ -29,10 +31,12 @@
         </div>
 
         <div class="home--container--content--courses--list">
-          <app-course-card></app-course-card>
-          <app-course-card></app-course-card>
-          <app-course-card></app-course-card>
-          <app-course-card></app-course-card>
+          <app-course-card *ngFor="let course of courseList"
+                           [backgroundImage]="course.imageUrl || 'assets/imgs/register-card-image.jpg'"
+                           [courseName]="course.name || '-'"
+                           [tagName]="course.category || '-'"
+                           [routerLink]="'/course/' + this.highlightedCourse?.id"
+          ></app-course-card>
         </div>
       </div>
     </div>

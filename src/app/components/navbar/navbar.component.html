@@ -1,13 +1,20 @@
+
 <div class="navbar">
   <div class="navbar--list">
+    <div (click)="back()" class="button-menu mb-15">
+      <img alt="icon" src="assets/icons/back-two-arrows.svg" />
+    </div>
+
     <div [routerLink]="'/home'" class="button-menu">
       <img alt="icon" src="assets/icons/home.svg" />
     </div>
-    <div [routerLink]="'/home'" class="button-menu">
+
+    <div [routerLink]="'/user'" class="button-menu">
       <img alt="icon" src="assets/icons/user.svg" />
     </div>
-    <div [routerLink]="'/home'" class="button-menu">
-      <img alt="icon" src="assets/icons/back-two-arrows.svg" />
+
+    <div [routerLink]="'/new-course'" class="button-menu">
+      <img alt="icon" src="assets/icons/course.svg" />
     </div>
   </div>
   <div class="navbar--fixed">

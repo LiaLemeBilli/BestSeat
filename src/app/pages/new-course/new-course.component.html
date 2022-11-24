@@ -1,0 +1,135 @@
+<div class="new-course">
+  <div class="new-course--container">
+    <app-navbar></app-navbar>
+
+    <div class="new-course--container--content">
+      <h4>Cursos cadastrados (click para editar)</h4>
+
+      <app-search-bar-input></app-search-bar-input>
+
+      <div class="new-course--container--content--courses">
+        <app-course-card *ngFor="let course of courseList"
+                         [tagName]="course.category || '-'"
+                         [courseName]="course.name || '-'"
+                         [backgroundImage]="course.imageUrl"
+                         (click)="editCourse(course.id)">
+        </app-course-card>
+      </div>
+
+      <div class="new-course--container--content--form-status">
+        <h4>Formulário</h4>
+        <button (click)="changeStatus(creationStatusEnum.CREATING)"
+                [style.backgroundColor]="creationStatusColor[creationStatus]">
+          {{ creationStatusText[creationStatus] }}
+          <p (click)="disableStatus()"
+             *ngIf="creationStatus !== creationStatusEnum.TO_CREATE">Cancelar</p>
+        </button>
+      </div>
+
+      <div *ngIf="creationStatus !== creationStatusEnum.TO_CREATE" class="new-course--container--content--form">
+        <div class="new-course--container--content--form--image-input">
+          <img alt="register-card" src="assets/imgs/register-card-image.jpg" />
+          <p>Alterar</p>
+        </div>
+
+        <div class="new-course--container--content--form--base-info">
+          <div class="input-container">
+            <label>Nome do curso</label>
+            <input [(ngModel)]="course.name" placeholder="Nome do curso" />
+          </div>
+
+          <div class="input-container">
+            <label>Categoria</label>
+            <input [(ngModel)]="course.category" placeholder="Categoria do curso" />
+          </div>
+
+          <div class="input-container">
+            <label>Autor</label>
+            <input [(ngModel)]="course.author" placeholder="Nome do autor (opcional)" />
+          </div>
+
+          <div class="input-container">
+            <label>Descrição</label>
+            <input [(ngModel)]="course.description" placeholder="Descrição do curso" />
+          </div>
+        </div>
+
+        <div class="new-course--container--content--form--modules">
+          <div class="new-course--container--content--form--modules--manage">
+            <h4>Gerencie os modulos do seu curso</h4>
+            <button (click)="addNewModule()">Adicionar Modulo</button>
+          </div>
+
+          <div class="new-course--container--content--form--modules--list">
+            <div *ngFor="let module of course.modules; let m = index; trackBy: trackBy"
+                 class="module">
+              <div class="module--name-option">
+                <span>{{ m + ' - ' + (module.title || 'Sem nome') }}</span>
+                <div class="module--name-option--options">
+                  <img (click)="removeModule(m)" alt="icon" src="assets/icons/trash.svg" />
+                  <img (click)="module.isOpened = !module.isOpened"
+                       alt="icon"
+                       [src]="module.isOpened ? 'assets/icons/arrow-up.svg' : 'assets/icons/arrow-down.svg'" />
+                </div>
+              </div>
+
+              <ng-container *ngIf="module.isOpened">
+                <div class="input-container">
+                  <label>Titulo do modulo</label>
+                  <input [(ngModel)]="module.title" placeholder="Titulo" />
+                </div>
+
+                <div class="module--classes">
+                  <div class="module--classes--manage">
+                    <h4>Gerencie as aulas dos modulos</h4>
+                    <button (click)="addNewCourse(m)">Adicionar aula</button>
+                  </div>
+
+                  <div *ngFor="let mClass of module.lessons; let c = index; trackBy: trackBy" class="classes">
+                    <div class="classes--name-option">
+                      <span>{{ c + ' - ' + (mClass.name || 'Sem nome') }}</span>
+                      <div class="classes--name-option--options">
+                        <img (click)="removeClass(m, c)" alt="icon" src="assets/icons/back-two-arrows.svg" />
+                        <img (click)="mClass.isOpened = !mClass.isOpened" alt="icon" src="assets/icons/back-two-arrows.svg" />
+                      </div>
+                    </div>
+
+                    <ng-container *ngIf="mClass.isOpened">
+                      <div class="input-container">
+                        <label>Titulo do aula</label>
+                        <input [(ngModel)]="mClass.name" placeholder="Titulo" />
+                      </div>
+
+                      <div class="input-container">
+                        <label>Descrição da aula</label>
+                        <input [(ngModel)]="mClass.description" placeholder="Descrição" />
+                      </div>
+
+                      <div class="input-container">
+                        <label>URL da aula</label>
+                        <input [(ngModel)]="mClass.contentUrl" placeholder="URL" />
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="new-course--container--content--form--buttons">
+          <button (click)="createOrUpdateCourse()"
+                  [style.backgroundColor]="creationStatusColor[creationStatus]">
+            {{ creationStatusButton[creationStatus] }}
+          </button>
+
+          <button (click)="disableStatus()"
+                  [style.backgroundColor]="'red'">
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

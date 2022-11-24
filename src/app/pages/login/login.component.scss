@@ -18,6 +18,11 @@
 
     padding: 3rem 2rem;
 
+    & > img {
+      width: 30%;
+      margin-bottom: 5rem;
+    }
+
     span {
       transition: all 0.3s ease-in-out;
 

@@ -2,8 +2,9 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { CreateUserPayload } from '../../models/payloads/create-user.payload';
+import { CourseProxy } from '../../models/proxies/course.proxy';
 import { UserProxy } from '../../models/proxies/user.proxy';
+import { CourseService } from '../../services/course.service';
 import { UserService } from '../../services/user.service';
 
 //#endregion
@@ -18,6 +19,7 @@ export class HomeComponent implements OnDestroy, OnInit {
 
   constructor(
     private readonly userService: UserService,
+    private readonly courseService: CourseService,
   ) {
     this.userSubscription = this.userService.getCurrentUser$().subscribe(user => {
       this.user = user;
@@ -31,9 +33,20 @@ export class HomeComponent implements OnDestroy, OnInit {
 
   //#region Properties
 
+  public courseList: CourseProxy[] = [];
+
   public user: UserProxy | undefined = undefined;
 
+  public highlightedCourse: CourseProxy = {
+    name: '',
+    description: '',
+    category: '',
+    imageUrl: '',
+  };
+
   public isLogged: boolean = false;
+
+  public isLoading: boolean = false;
 
   private userSubscription: Subscription;
 
@@ -41,15 +54,33 @@ export class HomeComponent implements OnDestroy, OnInit {
 
   //#region Methods
 
-  public ngOnInit(): void {
+  public async ngOnInit(): Promise<void> {
     this.user = this.userService.getCurrentUser();
 
     if (this.user)
       this.isLogged = true;
+
+    await this.loadCourses();
   }
 
   public ngOnDestroy(): void {
     this.userSubscription?.unsubscribe();
+  }
+
+  private async loadCourses(): Promise<void> {
+    try {
+      this.isLoading = true;
+      const courses = await this.courseService.list();
+
+      this.courseList = courses ? courses : [];
+
+      if (this.courseList.length !== 0)
+        this.highlightedCourse = this.courseList[0];
+    } catch (e) {
+      console.log(e);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   //#endregion

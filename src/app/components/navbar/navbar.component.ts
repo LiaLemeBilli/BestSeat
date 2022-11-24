@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { NavbarInterface } from '../../models/interfaces/navbar.interface';
 import { UserService } from '../../services/user.service';
+import { Location } from '@angular/common'
 
 //#endregion
 
@@ -19,7 +20,9 @@ export class NavbarComponent implements OnDestroy, OnInit {
 
   constructor(
     private readonly router: Router,
+    private readonly location: Location,
     private readonly userService: UserService,
+
   ) {
     this.userSubscription = this.userService.getCurrentUser$().subscribe(user => {
       if (user)
@@ -53,6 +56,10 @@ export class NavbarComponent implements OnDestroy, OnInit {
 
     if (user)
       this.isUserLogged = true;
+  }
+
+  public back(): void {
+    this.location.back();
   }
 
   public async logoutOrLoginUser(): Promise<void> {
