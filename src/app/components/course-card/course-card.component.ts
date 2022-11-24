@@ -20,7 +20,7 @@ export class CourseCardComponent {
   public courseName: string = '';
 
   @Input()
-  public tagName: string = '';
+  public tagName: string | undefined = '';
 
   //#endregion
 

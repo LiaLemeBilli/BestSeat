@@ -117,12 +117,40 @@
 
         &--courses {
           width: 100%;
+          min-height: 11rem;
           overflow: auto;
 
           display: grid;
           grid-template-columns: repeat(5, 1fr);
+          position: relative;
 
           gap: 2.5rem;
+
+          app-loading {
+            min-height: 11rem;
+            width: 100%;
+            position: absolute;
+          }
+
+          &--not-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            position: absolute;
+
+            width: 100%;
+            min-height: 11rem;
+
+            h5 {
+              width: 80%;
+              font-size: 1.5rem;
+              color: white;
+              text-align: center;
+            }
+          }
+
 
           @media (max-width: 1600px) {
             grid-template-columns: repeat(4, 1fr);
@@ -154,11 +182,38 @@
 
         &--courses {
           width: 100%;
+          min-height: 11rem;
+          position: relative;
 
           display: grid;
           grid-template-columns: repeat(5, 1fr);
 
           gap: 2.5rem;
+
+          app-loading {
+            min-height: 11rem;
+            width: 100%;
+            position: absolute;
+          }
+
+          &--not-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            position: absolute;
+
+            width: 100%;
+            min-height: 11rem;
+
+            h5 {
+              width: 80%;
+              font-size: 1.5rem;
+              color: white;
+              text-align: center;
+            }
+          }
 
           @media (max-width: 1600px) {
             grid-template-columns: repeat(4, 1fr);

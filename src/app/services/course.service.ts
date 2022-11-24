@@ -42,6 +42,14 @@ export class CourseService {
     return await this.interactor.delete(id);
   }
 
+  public async favorites(): Promise<CourseProxy[] | undefined> {
+    return await this.interactor.favorites();
+  }
+
+  public async withProgress(): Promise<CourseProxy[] | undefined> {
+    return await this.interactor.withProgress();
+  }
+
   //#endregion
 
 }

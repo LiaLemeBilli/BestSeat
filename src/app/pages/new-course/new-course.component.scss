@@ -354,6 +354,9 @@
           justify-content: center;
 
           & > button {
+            display: flex;
+            gap: 1rem;
+
             transition: background-color 0.3s ease-in;
 
             position: relative;

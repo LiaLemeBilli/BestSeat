@@ -24,9 +24,17 @@
         <h4>Seus cursos com progresso</h4>
 
         <div class="user--container--content--activites--courses">
-          <app-course-card></app-course-card>
-          <app-course-card></app-course-card>
-          <app-course-card></app-course-card>
+          <app-course-card *ngFor="let withProgress of withProgressCourses"
+                           [backgroundImage]="withProgress.imageUrl"
+                           [courseName]="withProgress.name"
+                           [tagName]="withProgress?.category"
+                           [routerLink]="'/course/' + this.withProgress?.id"
+          ></app-course-card>
+          <div class="user--container--content--activites--courses--not-content" *ngIf="!isLoadingCourses && withProgressCourses.length === 0">
+            <h5>Nenhum curso em progresso!</h5>
+          </div>
+
+          <app-loading *ngIf="isLoadingCourses" [size]="50"></app-loading>
         </div>
       </div>
 
@@ -34,12 +42,17 @@
         <h4>Seus favoritos</h4>
 
         <div class="user--container--content--favorites--courses">
-          <app-course-card></app-course-card>
-          <app-course-card></app-course-card>
-          <app-course-card></app-course-card>
-          <app-course-card></app-course-card>
-          <app-course-card></app-course-card>
-          <app-course-card></app-course-card>
+          <app-course-card *ngFor="let favorite of favoriteCourses"
+                           [backgroundImage]="favorite.imageUrl"
+                           [courseName]="favorite.name"
+                           [tagName]="favorite?.category"
+                           [routerLink]="'/course/' + this.favorite?.id"
+          ></app-course-card>
+          <div class="user--container--content--favorites--courses--not-content" *ngIf="!isLoadingCourses && favoriteCourses.length === 0">
+            <h5>Nenhum curso em seus favoritos!</h5>
+          </div>
+
+          <app-loading *ngIf="isLoadingCourses" [size]="50"></app-loading>
         </div>
       </div>
     </div>

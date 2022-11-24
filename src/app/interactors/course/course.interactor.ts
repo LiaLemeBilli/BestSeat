@@ -58,6 +58,18 @@ export class CourseInteractor {
     });
   }
 
+  public async favorites(): Promise<CourseProxy[] | undefined> {
+    return await this.http.get<CourseProxy[]>('course/favorites').toPromise().catch(error => {
+      throw new Error(error.error.message);
+    });
+  }
+
+  public async withProgress(): Promise<CourseProxy[] | undefined> {
+    return await this.http.get<CourseProxy[]>('course/with-progress').toPromise().catch(error => {
+      throw new Error(error.error.message);
+    });
+  }
+
   //#endregion
 
 }
