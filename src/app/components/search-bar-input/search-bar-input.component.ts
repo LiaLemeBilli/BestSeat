@@ -22,13 +22,21 @@ export class SearchBarInputComponent {
   @Output()
   public onChangeValue: EventEmitter<string> = new EventEmitter<string>();
 
+  public timer: any = null;
+
   //#endregion
 
   //#region Public methods
 
   public onChange($event: string): void {
-    this.value = $event;
-    this.onChangeValue.emit(this.value);
+    if (this.timer !== null)
+      clearTimeout(this.timer);
+
+    this.timer = setTimeout(() => {
+      this.value = $event;
+      this.onChangeValue.emit(this.value);
+    }, 400);
+
   }
 
   //#endregion

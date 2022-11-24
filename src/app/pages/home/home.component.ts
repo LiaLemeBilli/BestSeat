@@ -1,6 +1,7 @@
 //#region Imports
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { CourseProxy } from '../../models/proxies/course.proxy';
 import { UserProxy } from '../../models/proxies/user.proxy';
@@ -20,6 +21,7 @@ export class HomeComponent implements OnDestroy, OnInit {
   constructor(
     private readonly userService: UserService,
     private readonly courseService: CourseService,
+    private readonly toastrService: ToastrService,
   ) {
     this.userSubscription = this.userService.getCurrentUser$().subscribe(user => {
       this.user = user;
@@ -46,7 +48,7 @@ export class HomeComponent implements OnDestroy, OnInit {
 
   public isLogged: boolean = false;
 
-  public isLoading: boolean = false;
+  public isLoadingCourses: boolean = false;
 
   private userSubscription: Subscription;
 
@@ -67,19 +69,19 @@ export class HomeComponent implements OnDestroy, OnInit {
     this.userSubscription?.unsubscribe();
   }
 
-  private async loadCourses(): Promise<void> {
+  public async loadCourses(searchContent?: string, page?: number, limit?: number): Promise<void> {
     try {
-      this.isLoading = true;
-      const courses = await this.courseService.list();
+      this.isLoadingCourses = true;
+      const courses = await this.courseService.list(searchContent, page, limit);
 
       this.courseList = courses ? courses : [];
 
       if (this.courseList.length !== 0)
         this.highlightedCourse = this.courseList[0];
-    } catch (e) {
-      console.log(e);
+    } catch (e: any) {
+      this.toastrService.error(e.message, 'Atenção!');
     } finally {
-      this.isLoading = false;
+      this.isLoadingCourses = false;
     }
   }
 

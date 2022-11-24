@@ -38,11 +38,16 @@
 
       &--courses {
         width: 100%;
+        min-height: 11rem;
         margin-top: 1.5rem;
         overflow-x: auto;
+        overflow-y: hidden;
 
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
+        display: flex;
+
+        app-course-card {
+          width: 20% !important;
+        }
 
         gap: 2.5rem;
 
@@ -58,19 +63,27 @@
         }
 
         @media (max-width: 1600px) {
-          grid-template-columns: repeat(4, 1fr);
+          app-course-card {
+            width: 25% !important;
+          }
         }
 
         @media (max-width: 1300px) {
-          grid-template-columns: repeat(3, 1fr);
+          app-course-card {
+            width: 33% !important;
+          }
         }
 
         @media (max-width: 1000px) {
-          grid-template-columns: repeat(2, 1fr);
+          app-course-card {
+            width: 50% !important;
+          }
         }
 
         @media (max-width: 768px) {
-          grid-template-columns: repeat(1, 1fr);
+          app-course-card {
+            width: 100% !important;
+          }
         }
       }
 
@@ -120,6 +133,42 @@
             p {
               left: 0;
             }
+          }
+        }
+      }
+
+      &--not-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        width: 100%;
+
+        h5 {
+          width: 80%;
+          font-size: 1.5rem;
+          color: white;
+          text-align: center;
+        }
+
+        & > button {
+          transition: background-color 0.3s ease-in;
+
+          height: min-content;
+          width: auto;
+          padding: 0.6rem 2rem;
+          margin-top: 1rem;
+
+          color: white;
+          border: 0;
+          border-radius: 22px;
+          background-color: #BA46E1;
+
+          cursor: pointer;
+
+          &:hover {
+            background-color: #101010;
           }
         }
       }
@@ -331,4 +380,22 @@
 
 .input-container {
   margin: 0.75rem 0;
+}
+
+.not-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+
+  h5 {
+    font-size: 1.5rem;
+    color: white;
+    text-align: center;
+  }
+}
+
+app-loading {
+  width: 100%;
 }

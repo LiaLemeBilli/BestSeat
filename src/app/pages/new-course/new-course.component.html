@@ -5,15 +5,21 @@
     <div class="new-course--container--content">
       <h4>Cursos cadastrados (click para editar)</h4>
 
-      <app-search-bar-input></app-search-bar-input>
+      <app-search-bar-input (onChangeValue)="loadCourses($event)"></app-search-bar-input>
 
       <div class="new-course--container--content--courses">
-        <app-course-card *ngFor="let course of courseList"
-                         [tagName]="course.category || '-'"
-                         [courseName]="course.name || '-'"
-                         [backgroundImage]="course.imageUrl"
-                         (click)="editCourse(course.id)">
-        </app-course-card>
+        <ng-container *ngIf="courseList.length !== 0">
+          <app-course-card *ngFor="let course of courseList"
+                           [tagName]="course.category || '-'"
+                           [courseName]="course.name || '-'"
+                           [backgroundImage]="course.imageUrl"
+                           (click)="editCourse(course.id)">
+          </app-course-card>
+        </ng-container>
+        <app-loading *ngIf="isLoadingCourseList" [size]="60"></app-loading>
+        <div class="not-content" *ngIf="!isLoadingCourseList && courseList.length === 0">
+          <h5>Nenhum curso encontrado!</h5>
+        </div>
       </div>
 
       <div class="new-course--container--content--form-status">
@@ -23,6 +29,14 @@
           {{ creationStatusText[creationStatus] }}
           <p (click)="disableStatus()"
              *ngIf="creationStatus !== creationStatusEnum.TO_CREATE">Cancelar</p>
+        </button>
+      </div>
+
+      <div *ngIf="creationStatus === creationStatusEnum.TO_CREATE"
+           class="new-course--container--content--not-content">
+        <h5>Clique em um curso para editar, <br> ou crie um novo clicando no botão abaixo</h5>
+        <button (click)="changeStatus(creationStatusEnum.CREATING)">
+          Novo Curso
         </button>
       </div>
 
@@ -122,6 +136,7 @@
           <button (click)="createOrUpdateCourse()"
                   [style.backgroundColor]="creationStatusColor[creationStatus]">
             {{ creationStatusButton[creationStatus] }}
+            <app-loading *ngIf="isCreatingOrEditing" [size]="20"></app-loading>
           </button>
 
           <button (click)="disableStatus()"

@@ -1,6 +1,7 @@
-export interface LessonProxy {
-  id: number;
-  email: string;
-  name: string;
-  role?: string;
+import { BaseProxy } from './base.proxy';
+
+export interface LessonProxy extends BaseProxy {
+  title: string;
+  description?: string;
+  videoUrl?: string;
 }

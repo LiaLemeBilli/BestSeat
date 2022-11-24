@@ -160,6 +160,21 @@
             grid-template-columns: repeat(1, 1fr);
           }
         }
+
+        &--not-content {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          width: 100%;
+          min-height: 11rem;
+
+          h5 {
+            font-size: 1.5rem;
+            color: white;
+            text-align: center;
+          }
+        }
       }
     }
   }

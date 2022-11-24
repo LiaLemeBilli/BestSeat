@@ -1,6 +1,7 @@
 //#region Imports
 
 import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import {
   creationRecordButton,
   creationRecordColor,
@@ -25,6 +26,7 @@ export class NewCourseComponent implements OnInit {
 
   constructor(
     private readonly courseService: CourseService,
+    private readonly toastrService: ToastrService
   ) { }
 
   //#endregion
@@ -36,6 +38,8 @@ export class NewCourseComponent implements OnInit {
   public isLoading: boolean = false;
 
   public isLoadingCourseList: boolean = false;
+
+  public isCreatingOrEditing: boolean = false;
 
   public isLoadingCourseToEdit: boolean = false;
 
@@ -103,8 +107,8 @@ export class NewCourseComponent implements OnInit {
       });
 
       this.course = course;
-    } catch (e) {
-      console.log(e);
+    } catch (e: any) {
+      this.toastrService.error(e.message, 'Atenção!');
     } finally {
       this.isLoadingCourseToEdit = false;
     }
@@ -149,7 +153,7 @@ export class NewCourseComponent implements OnInit {
   }
 
   public async createOrUpdateCourse(): Promise<void> {
-    this.creationStatus = CreationStatusEnum.TO_CREATE;
+    this.toastrService.success('Curso criado com sucesso!');
   }
 
   public disableStatus(): void {
@@ -170,14 +174,14 @@ export class NewCourseComponent implements OnInit {
     return mClass.description;
   }
 
-  private async loadCourses(): Promise<void> {
+  public async loadCourses(searchContent?: string): Promise<void> {
     try {
       this.isLoadingCourseList = true;
-      const courses = await this.courseService.list();
+      const courses = await this.courseService.list(searchContent);
 
       this.courseList = courses ? courses : [];
-    } catch (e) {
-      console.log(e);
+    } catch (e: any) {
+      this.toastrService.error(e.message, 'Atenção!');
     } finally {
       this.isLoadingCourseList = false;
     }

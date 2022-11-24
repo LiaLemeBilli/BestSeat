@@ -1,7 +1,12 @@
 //#region Imports
 
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { CourseModuleProxy } from '../../models/proxies/course-module.proxy';
+import { CourseProxy } from '../../models/proxies/course.proxy';
+import { LessonProxy } from '../../models/proxies/lesson.proxy';
+import { CourseService } from '../../services/course.service';
 import { UserService } from '../../services/user.service';
 
 //#endregion
@@ -17,76 +22,33 @@ export class CourseComponent implements OnInit {
   constructor(
     private readonly router: Router,
     private readonly userService: UserService,
+    private readonly toastrService: ToastrService,
+    private readonly courseService: CourseService,
+    private readonly activatedRoute: ActivatedRoute,
   ) { }
 
   //#endregion
 
   //#region Properties
 
-  public course: any = {
-    title: 'Typescript do básico ao avançado',
-    category: [
-      'Programação',
-      'Tecnologia'
-    ],
-    description: 'Sua change é agora, aprenda umas das linguagens mais usadas' +
-      'do mundo nesse curso, comece do básico para entender a estutura, e se torne' +
-      'um mestre.'
+  public courseId: number = 0;
+
+  public course: CourseProxy | undefined = {
+    name: '',
+    category: '',
+    imageUrl: '',
+    description: '',
   };
 
-  public selectedModule: any = null;
+  public selectedModule: CourseModuleProxy | null = null;
 
-  public selectedLesson: any = null;
+  public selectedLesson: LessonProxy | null = null;
 
-  public modules: any[] = [
-    {
-      id: 0,
-      title: 'Estrutura Typescript',
-      lessons: [
-        {
-          id: 0,
-          title: 'Como criar uma classe',
-          videoLink: 'https://www.youtube.com/embed/LXb3EKWsInQ?controls=0'
-        },
-        {
-          id: 1,
-          title: 'Como criar uma interface',
-          videoLink: 'https://www.youtube.com/embed/LXb3EKWsInQ?controls=0'
-        },
-        {
-          id: 2,
-          title: 'Como criar um enum',
-          videoLink: 'https://www.youtube.com/embed/LXb3EKWsInQ?controls=0'
-        }
-      ]
-    },
-    {
-      id: 1,
-      title: 'Estrutura Typescript',
-      lessons: [
-        {
-          id: 3,
-          title: 'Como criar uma classe',
-          videoLink: 'https://www.youtube.com/embed/LXb3EKWsInQ?controls=0'
-        },
-        {
-          id: 4,
-          title: 'Como criar uma interface',
-          videoLink: 'https://www.youtube.com/embed/LXb3EKWsInQ?controls=0'
-        },
-        {
-          id: 5,
-          title: 'Como criar um enum',
-          videoLink: 'https://www.youtube.com/embed/LXb3EKWsInQ?controls=0'
-        }
-      ]
-    }
-  ];
+  public modules: CourseModuleProxy[] = [];
 
-  public currentLesson = {
-    title: 'Como criar uma classe.',
-    videoLink: 'https://www.youtube.com/embed/LXb3EKWsInQ?controls=0'
-  }
+  public currentLesson: LessonProxy | null = null;
+
+  public isLoadingCourse: boolean = false;
 
   //#endregion
 
@@ -98,7 +60,9 @@ export class CourseComponent implements OnInit {
 
       if (!user)
         await this.router.navigateByUrl('\home');
-    } finally {}
+    } finally {
+      await this.loadCourse();
+    }
   }
 
   public selectModule(module: any): void {
@@ -109,7 +73,29 @@ export class CourseComponent implements OnInit {
     }
 
     this.selectedModule = module;
-    this.selectedLesson = this.selectedModule.lessons[0];
+    this.selectedLesson = this.selectedModule?.lessons[0] ? this.selectedModule?.lessons[0] : null;
+  }
+
+  public async loadCourse(): Promise<void> {
+    try {
+      this.isLoadingCourse = true;
+
+      const courseId = this.activatedRoute.snapshot.paramMap.get('id');
+
+      if (courseId)
+        this.course = await this.courseService.get(+courseId);
+
+      if (!this.course) {
+        this.toastrService.warning('Nenhum curso encontrado, tente novamente mais tarde', 'Atenção');
+        await this.router.navigateByUrl('\home');
+      }
+
+    } catch (e: any) {
+      this.toastrService.warning(e.message, 'Atenção');
+      await this.router.navigateByUrl('\home');
+    } finally {
+      this.isLoadingCourse = false;
+    }
   }
 
   //#endregion

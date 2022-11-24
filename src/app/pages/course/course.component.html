@@ -3,12 +3,16 @@
 </div>
 
 <div class="course">
-  <div class="course--title">
-    <h5>{{ course.title }}</h5>
+  <div *ngIf="isLoadingCourse" class="course--loading">
+    <app-loading [size]="75"></app-loading>
+  </div>
+
+  <div *ngIf="!isLoadingCourse" class="course--title">
+    <h5>{{ course?.name || '-' }}</h5>
     <img src="assets/imgs/register-card-image.jpg" alt="user" />
   </div>
 
-  <div class="course--content">
+  <div *ngIf="!isLoadingCourse" class="course--content">
     <div class="course--content--lesson">
       <iframe src="https://www.youtube.com/embed/LXb3EKWsInQ?controls=0"
               title="YouTube video player" frameborder="0"
@@ -16,12 +20,12 @@
               allowfullscreen>
       </iframe>
       <div class="course--content--lesson--name">
-        {{ currentLesson.title }}
+        {{ currentLesson?.title }}
       </div>
     </div>
 
     <div class="course--content--modules">
-      <div class="course--content--modules--progress">
+      <div *ngIf="modules.length !== 0 && !isLoadingCourse" class="course--content--modules--progress">
         <ng-container *ngFor="let module of modules; let i = index">
           <div class="progress"
                [class.hidden-progress]="selectedModule?.id !== module.id && i === modules.length - 1">
@@ -36,9 +40,13 @@
             </div>
           </div>
         </ng-container>
-
       </div>
-      <div class="course--content--modules--options">
+
+      <div *ngIf="modules.length === 0 && !isLoadingCourse" class="course--content--modules--not-content">
+        <h5>Nenhum modulo foi <br> econtrado nesse curso, aguarde!</h5>
+      </div>
+
+      <div *ngIf="modules.length !== 0 && !isLoadingCourse" class="course--content--modules--options">
         <div *ngFor="let module of modules" class="option">
           <h4 (click)="selectModule(module)"
               [class.selected-option]="selectedModule?.id === module.id">
