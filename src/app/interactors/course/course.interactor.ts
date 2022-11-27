@@ -26,13 +26,21 @@ export class CourseInteractor {
 
   //#region Public Methods
 
-  public async list(name?: string, category?: string, page?: number, limit?: number): Promise<CourseProxy[] | undefined> {
-    const s = {
-      ...(name || name !== '') && { contL: name },
-      ...(category || category !== '') && { contL: category },
-    }
+  public async list(name?: string, category?: string): Promise<CourseProxy[] | undefined> {
+    let url = 'course'
 
-    let url = 'course?s=' + encodeURIComponent(JSON.stringify(s));
+    if (name && name !== '')
+      url = url + '?name=' + encodeURIComponent(name);
+
+    if (category && category !== '') {
+      if (!url.includes('?'))
+        url = url + '?';
+
+      if (url.includes('?'))
+        url = url + '&';
+
+      url = url + 'category=' + encodeURIComponent(category);
+    }
 
     return await this.http.get<CourseProxy[]>(url).toPromise().catch(error => {
       throw new Error(error.error.message);
@@ -70,19 +78,19 @@ export class CourseInteractor {
   }
 
   public async createModule(module: ModulePayload): Promise<CourseModuleProxy | undefined> {
-    return await this.http.post<CourseModuleProxy>('module', module).toPromise().catch(error => {
+    return await this.http.post<CourseModuleProxy>('course-module', module).toPromise().catch(error => {
       throw new Error(error.error.message);
     });
   }
 
   public async updateModule(id: number, module: ModulePayload): Promise<CourseModuleProxy | undefined> {
-    return await this.http.post<CourseModuleProxy>('module/' + id.toString(), module).toPromise().catch(error => {
+    return await this.http.post<CourseModuleProxy>('course-module/' + id.toString(), module).toPromise().catch(error => {
       throw new Error(error.error.message);
     });
   }
 
   public async deleteModule(id: number): Promise<CourseModuleProxy | undefined> {
-    return await this.http.delete<CourseModuleProxy>('module/' + id.toString()).toPromise().catch(error => {
+    return await this.http.delete<CourseModuleProxy>('course-module/' + id.toString()).toPromise().catch(error => {
       throw new Error(error.error.message);
     });
   }
@@ -112,11 +120,7 @@ export class CourseInteractor {
   }
 
   public async getModulesByCourse(id: number): Promise<CourseModuleProxy[] | undefined> {
-    const s = {
-      courseId: id
-    }
-
-    const url = 'modules?s=' + encodeURIComponent(JSON.stringify(s));
+    const url = 'course-module/list?couseId=' + id.toString();
 
     return await this.http.get<CourseModuleProxy[]>(url).toPromise().catch(error => {
       throw new Error(error.error.message);
@@ -128,7 +132,7 @@ export class CourseInteractor {
       module: id
     }
 
-    const url = 'lessons?s=' + encodeURIComponent(JSON.stringify(s));
+    const url = 'lesson?s=' + encodeURIComponent(JSON.stringify(s));
 
     return await this.http.get<LessonProxy[]>(url).toPromise().catch(error => {
       throw new Error(error.error.message);

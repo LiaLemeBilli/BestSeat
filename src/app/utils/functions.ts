@@ -9,6 +9,17 @@ export function isValidEmail(email: string): boolean {
   return regex.test(email);
 }
 
+export function getYoutubeEmbedUrl(url: string): string {
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+
+  const id = (match && match[2].length === 11)
+    ? match[2]
+    : null;
+
+  return 'https://www.youtube.com/embed/' + id
+}
+
 export function isValidPassword(password: string): boolean {
   return (password && password.trim().length >= 6) as boolean;
 }

@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
   //#region Properties
 
   public userLogin: UserLoginPayload = {
-    email: '',
+    username: '',
     password: '',
   }
 
@@ -57,7 +57,7 @@ export class LoginComponent implements OnInit {
       this.errorMessage = '';
 
       if (user)
-        await this.router.navigateByUrl('\home');
+        await this.router.navigateByUrl('/home');
     } catch (e: any) {
       this.errorMessage = e.message;
     } finally {

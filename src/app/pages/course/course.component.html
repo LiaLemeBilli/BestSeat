@@ -8,19 +8,29 @@
   </div>
 
   <div *ngIf="!isLoadingCourse" class="course--title">
-    <h5>{{ course?.name || '-' }}</h5>
-    <img src="assets/imgs/register-card-image.jpg" alt="user" />
+    <div class="course--title--favorite">
+      <h5>{{ course?.name || '-' }}</h5>
+      <button (click)="manageFavoriteCourse()" class="{{ isFavorite ? 'primary-button' : 'default-button' }}">{{ isFavorite ? 'Remover Favorito' : '+ Favoritar' }}</button>
+    </div>
+
+    <img [src]="user?.imageUrl || 'assets/imgs/register-card-image.jpg'" alt="user" />
   </div>
 
   <div *ngIf="!isLoadingCourse" class="course--content">
     <div class="course--content--lesson">
-      <iframe src="https://www.youtube.com/embed/LXb3EKWsInQ?controls=0"
+      <iframe *ngIf="currentLesson?.videoUrl" [src]="embed(currentLesson!.videoUrl!) | safeResourceUrl"
               title="YouTube video player" frameborder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowfullscreen>
       </iframe>
+      <div *ngIf="!currentLesson?.videoUrl"  class="course--content--lesson--no-content">
+        <h6>Nenhuma aula selecionada!</h6>
+      </div>
       <div class="course--content--lesson--name">
-        {{ currentLesson?.title }}
+        {{ currentLesson?.title || 'Sem titulo' }}
+      </div>
+      <div class="course--content--lesson--description">
+        {{ currentLesson?.description || 'Sem descrição' }}
       </div>
     </div>
 
@@ -53,8 +63,8 @@
             {{ module.title }}
           </h4>
           <div class="option--lessons" [class.show]="selectedModule?.id === module.id">
-            <div (click)="selectedLesson = lesson"
-                 [class.selected-lesson]="selectedLesson?.id === lesson.id"
+            <div (click)="currentLesson = lesson"
+                 [class.selected-lesson]="currentLesson?.id === lesson.id"
                  *ngFor="let lesson of module.lessons" class="lesson">
               {{ lesson.title }}
             </div>

@@ -38,6 +38,17 @@
   }
 }
 
+.default-button {
+  @extend .base-button;
+
+  color: white;
+  background-color: #888888;
+
+  app-loading {
+    margin-left: 0.5rem;
+  }
+}
+
 .danger-button {
   @extend .base-button;
 

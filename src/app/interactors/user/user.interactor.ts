@@ -29,8 +29,20 @@ export class UserInteractor {
     });
   }
 
-  public async login(payload: UserLoginPayload): Promise<UserProxy | undefined> {
-    return await this.http.post<UserProxy>('auth/local', payload).toPromise().catch(error => {
+  public async login(payload: UserLoginPayload): Promise<string | undefined> {
+    return await this.http.post<{ accessToken: string }>('auth/local', payload).toPromise().catch(error => {
+      throw new Error(error.error.message);
+    }).then(r => r!.accessToken);
+  }
+
+  public async getAvatarEmail(email: string): Promise<string> {
+    return await this.http.get<{ imageUrl: string }>('user/avatar/' + encodeURIComponent(email)).toPromise().catch(error => {
+      throw new Error(error.error.message);
+    }).then(r => r!.imageUrl);
+  }
+
+  public async getMe(accessToken: string): Promise<UserProxy | undefined> {
+    return await this.http.get<UserProxy>('user/me', { headers: { Authorization: 'Bearer ' + accessToken } }).toPromise().catch(error => {
       throw new Error(error.error.message);
     });
   }
