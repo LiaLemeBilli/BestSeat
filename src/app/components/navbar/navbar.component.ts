@@ -4,6 +4,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { NavbarInterface } from '../../models/interfaces/navbar.interface';
+import { UserProxy } from '../../models/proxies/user.proxy';
 import { UserService } from '../../services/user.service';
 import { Location } from '@angular/common'
 
@@ -43,6 +44,14 @@ export class NavbarComponent implements OnDestroy, OnInit {
   @Output()
   public onChangeActivatedMenu: EventEmitter<NavbarInterface> = new EventEmitter<NavbarInterface>();
 
+  public user: UserProxy = {
+    name: '',
+    imageUrl: '',
+    email: '',
+    roles: [],
+    id: 0
+  };
+
   public isUserLogged: boolean = false;
 
   private userSubscription: Subscription;
@@ -54,8 +63,10 @@ export class NavbarComponent implements OnDestroy, OnInit {
   public ngOnInit(): void {
     const user = this.userService.getCurrentUser();
 
-    if (user)
+    if (user) {
       this.isUserLogged = true;
+      this.user = user;
+    }
   }
 
   public back(): void {

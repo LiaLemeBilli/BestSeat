@@ -28,7 +28,7 @@ export class AuthService {
   //#region Public Methods
 
   public async login(payload: UserLoginPayload): Promise<UserProxy | undefined> {
-    if (!isValidEmail(payload.email))
+    if (!isValidEmail(payload.username))
       throw new Error('Email invalido.');
 
     if (!isValidPassword(payload.password))

@@ -109,7 +109,7 @@ export class HomeComponent implements OnDestroy, OnInit {
       if (this.activatedCategoryIndex)
         categoryFilter = this.categoryList[this.activatedCategoryIndex];
 
-      const courses = await this.courseService.list(this.searchContent, categoryFilter, page, limit);
+      const courses = await this.courseService.list(this.searchContent, categoryFilter);
 
       this.courseList = courses ? courses : [];
 

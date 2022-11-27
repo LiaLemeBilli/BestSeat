@@ -58,20 +58,16 @@ export class UserService {
   }
 
   public async login(payload: UserLoginPayload): Promise<UserProxy | undefined> {
-    if (!isValidEmail(payload.email))
+    if (!isValidEmail(payload.username))
       throw new Error('Email invalido.');
 
     if (!isValidPassword(payload.password))
       throw new Error('Senha invalida.');
 
-    const user: UserProxy = {
-      name: 'Higor Lins',
-      email: payload.email,
-      id: 1,
-    }
+    const accessToken = await this.interactor.login(payload);
+    const user = await this.interactor.getMe(accessToken!);
 
-    await this.interactor.login(payload);
-    this.storageService.setItem<UserProxy>('USER', user);
+    this.storageService.setItem<UserProxy>('USER', user!);
     this.setCurrentUser(user);
 
     return user;
@@ -84,6 +80,10 @@ export class UserService {
       return user.success;
 
     return undefined;
+  }
+
+  public async getAvatarByEmail(email: string): Promise<string> {
+    return await this.interactor.getAvatarEmail(email);
   }
 
   public logout(): void {

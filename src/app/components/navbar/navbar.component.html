@@ -9,11 +9,11 @@
       <img alt="icon" src="assets/icons/home.svg" />
     </div>
 
-    <div [routerLink]="'/user'" class="button-menu">
+    <div *ngIf="isUserLogged" [routerLink]="'/user'" class="button-menu">
       <img alt="icon" src="assets/icons/user.svg" />
     </div>
 
-    <div [routerLink]="'/new-course'" class="button-menu">
+    <div *ngIf="user?.roles?.includes('admin')" [routerLink]="'/new-course'" class="button-menu">
       <img alt="icon" src="assets/icons/course.svg" />
     </div>
   </div>

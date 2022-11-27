@@ -8,6 +8,7 @@ import { CourseCardModule } from '../../components/course-card/course-card.modul
 import { NavbarModule } from '../../components/navbar/navbar.module';
 import { SearchBarInputModule } from '../../components/search-bar-input/search-bar-input.module';
 import { LoadingModule } from '../../components/loading/loading.module';
+import { SafeResourceUrlPipe } from '../../pipes/safeResourceUrlPipe';
 import { CourseComponent } from './course.component';
 
 //#endregion
@@ -26,6 +27,7 @@ const routes: Routes = [{ path: '', component: CourseComponent }];
   ],
   declarations: [
     CourseComponent,
+    SafeResourceUrlPipe
   ],
 })
 export class CourseModule {}

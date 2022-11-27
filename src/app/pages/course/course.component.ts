@@ -1,13 +1,16 @@
 //#region Imports
 
 import { Component, OnInit } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CourseModuleProxy } from '../../models/proxies/course-module.proxy';
 import { CourseProxy } from '../../models/proxies/course.proxy';
 import { LessonProxy } from '../../models/proxies/lesson.proxy';
+import { UserProxy } from '../../models/proxies/user.proxy';
 import { CourseService } from '../../services/course.service';
 import { UserService } from '../../services/user.service';
+import { getYoutubeEmbedUrl } from '../../utils/functions';
 
 //#endregion
 
@@ -20,6 +23,7 @@ export class CourseComponent implements OnInit {
   //#region Constructors
 
   constructor(
+    private readonly sanitizer: DomSanitizer,
     private readonly router: Router,
     private readonly userService: UserService,
     private readonly toastrService: ToastrService,
@@ -40,15 +44,27 @@ export class CourseComponent implements OnInit {
     description: '',
   };
 
+  public user: UserProxy = {
+    name: '',
+    imageUrl: '',
+    email: '',
+    roles: [],
+    id: 0
+  };
+
   public selectedModule: CourseModuleProxy | null = null;
-
-  public selectedLesson: LessonProxy | null = null;
-
-  public modules: CourseModuleProxy[] = [];
 
   public currentLesson: LessonProxy | null = null;
 
+  public modules: CourseModuleProxy[] = [];
+
   public isLoadingCourse: boolean = false;
+
+  public favorites: number[] = [];
+
+  public isFavorite: boolean = false;
+
+  public embed = getYoutubeEmbedUrl;
 
   //#endregion
 
@@ -59,21 +75,41 @@ export class CourseComponent implements OnInit {
       const user = await this.userService.getCurrentUser();
 
       if (!user)
-        await this.router.navigateByUrl('\home');
+        await this.router.navigateByUrl('/home');
+
+      this.user = user!;
+      this.favorites = this.courseService.getFavorites() || [];
     } finally {
       await this.loadCourse();
     }
   }
 
+  public manageFavoriteCourse(): void {
+    this.isFavorite = !this.isFavorite;
+
+    if (this.isFavorite)
+      this.courseService.saveFavorite(this.courseId);
+    else
+      this.courseService.removeFavorite(this.courseId);
+  }
+
   public selectModule(module: any): void {
     if (this.selectedModule === module) {
-      this.selectedLesson = null;
+      this.currentLesson = null;
       this.selectedModule = null;
       return;
     }
 
     this.selectedModule = module;
-    this.selectedLesson = this.selectedModule?.lessons[0] ? this.selectedModule?.lessons[0] : null;
+    this.currentLesson = this.selectedModule?.lessons[0] ? this.selectedModule?.lessons[0] : null;
+  }
+
+  public favoriteCourse(): void {
+    this.courseService.saveFavorite(this.courseId);
+  }
+
+  public removeFavoriteCourse(): void {
+    this.courseService.removeFavorite(this.courseId);
   }
 
   public async loadCourse(): Promise<void> {
@@ -82,17 +118,23 @@ export class CourseComponent implements OnInit {
 
       const courseId = this.activatedRoute.snapshot.paramMap.get('id');
 
-      if (courseId)
+      if (courseId) {
         this.course = await this.courseService.get(+courseId);
+        this.courseId = +courseId;
+
+        this.isFavorite = this.favorites.includes(this.courseId);
+      }
 
       if (!this.course) {
         this.toastrService.warning('Nenhum curso encontrado, tente novamente mais tarde', 'Atenção');
-        await this.router.navigateByUrl('\home');
+        await this.router.navigateByUrl('/home');
       }
 
+      this.modules = this.course?.modules || [];
+      this.modules = this.modules.filter(module => module.lessons.length !== 0);
     } catch (e: any) {
       this.toastrService.warning(e.message, 'Atenção');
-      await this.router.navigateByUrl('\home');
+      await this.router.navigateByUrl('/home');
     } finally {
       this.isLoadingCourse = false;
     }

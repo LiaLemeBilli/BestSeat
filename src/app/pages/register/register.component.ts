@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CreateUserPayload } from '../../models/payloads/create-user.payload';
 import { UserService } from '../../services/user.service';
+import { isValidEmail } from '../../utils/functions';
 
 //#endregion
 
@@ -34,9 +35,11 @@ export class RegisterComponent implements OnInit {
 
   public errorMessage: string = '';
 
-  public base64UserImage: string = '';
+  public userImage: string = '';
 
   public isRegistering: boolean = false;
+
+  public avatarTimer: any;
 
   //#endregion
 
@@ -62,7 +65,7 @@ export class RegisterComponent implements OnInit {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
-      this.base64UserImage = reader.result as string;
+      this.userImage = reader.result as string;
     };
   }
 
@@ -73,10 +76,13 @@ export class RegisterComponent implements OnInit {
     try {
       this.isRegistering = true;
 
-      // this.createUser.imageUrl = this.base64UserImage;
-      await this.userService.createUser(this.createUser);
+      if (this.createUser.imageUrl === '')
+        delete this.createUser.imageUrl;
 
-      await this.userService.login({ email: this.createUser.email, password: this.createUser.password });
+      await this.userService.createUser(this.createUser);
+      delete this.createUser.confirmPassword;
+
+      await this.userService.login({ username: this.createUser.email, password: this.createUser.password });
       await this.router.navigateByUrl('\home');
 
       this.errorMessage = '';
@@ -85,6 +91,18 @@ export class RegisterComponent implements OnInit {
     } finally {
       this.isRegistering = false;
     }
+  }
+
+  public async getAvatarUrl(): Promise<void> {
+    if (this.avatarTimer !== null)
+      clearTimeout(this.avatarTimer);
+
+    this.avatarTimer = setTimeout(async () => {
+      if (!isValidEmail(this.createUser.email))
+        return;
+
+      this.userImage = await this.userService.getAvatarByEmail(this.createUser.email)
+    }, 400);
   }
 
   //#endregion

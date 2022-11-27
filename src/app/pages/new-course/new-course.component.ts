@@ -72,16 +72,16 @@ export class NewCourseComponent implements OnInit {
   public lesson: LessonPayload = {
     id: null,
     title: '',
-    contentUrl: '',
+    videoUrl: '',
     description: '',
-    moduleId: 0,
+    courseModuleId: 0,
   }
 
   public alertDialog: Ngxalert = new Ngxalert;
 
   public creationStatusEnum: typeof CreationStatusEnum = CreationStatusEnum;
 
-  public courseCreationStatus: CreationStatusEnum = CreationStatusEnum.UPDATING;
+  public courseCreationStatus: CreationStatusEnum = CreationStatusEnum.NONE;
 
   public lessonCreationStatus: CreationStatusEnum = CreationStatusEnum.NONE;
 
@@ -125,7 +125,7 @@ export class NewCourseComponent implements OnInit {
     this.lesson.id = lesson.id;
     this.lesson.description = lesson.description;
     this.lesson.title = lesson.title;
-    this.lesson.contentUrl = lesson.contentUrl;
+    this.lesson.videoUrl = lesson.videoUrl.toString();
 
     this.lessonCreationStatus = CreationStatusEnum.UPDATING;
   }
@@ -374,7 +374,7 @@ export class NewCourseComponent implements OnInit {
         delete this.lesson.id;
 
         if (this.module.id)
-          this.lesson.moduleId = this.module.id;
+          this.lesson.courseModuleId = this.module.id;
 
         await this.courseService.createLesson(this.lesson);
 
@@ -410,8 +410,8 @@ export class NewCourseComponent implements OnInit {
       id: null,
       title: '',
       description: '',
-      contentUrl: '',
-      moduleId: 0,
+      videoUrl: '',
+      courseModuleId: 0,
     }
     this.lessonCreationStatus = CreationStatusEnum.NONE;
   }
@@ -434,8 +434,8 @@ export class NewCourseComponent implements OnInit {
       id: null,
       title: '',
       description: '',
-      contentUrl: '',
-      moduleId: 0,
+      videoUrl: '',
+      courseModuleId: 0,
     }
     this.lessonCreationStatus = CreationStatusEnum.NONE;
   }
@@ -463,7 +463,7 @@ export class NewCourseComponent implements OnInit {
     if (this.lesson.title?.length === 0)
       throw new Error('É necessário definir o titulo da aula.');
 
-    if (this.lesson.contentUrl?.length === 0)
+    if (this.lesson.videoUrl?.length === 0)
       throw new Error('É necessário definir o URL da aula.');
 
     if (this.lesson.description?.length === 0)

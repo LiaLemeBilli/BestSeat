@@ -7,9 +7,8 @@
         Voltar
       </div>
 
-      <input #input (change)="selectImage($event)" type="file" accept="image/jpeg, image/png, image/jpg" />
-      <img alt="user-image" [src]="base64UserImage || 'assets/imgs/register-card-image.jpg'"/>
-      <span (click)="input.click()">Editar</span>
+      <img alt="user-image" [src]="userImage || 'assets/imgs/register-card-image.jpg'"/>
+      <a href="https://pt.gravatar.com/emails/" target="_blank">Editar</a>
     </div>
 
     <div class="register--forms--data">
@@ -20,7 +19,7 @@
 
       <div class="input-container">
         <label>E-mail</label>
-        <input [(ngModel)]="createUser.email" type="text" maxlength="200" placeholder="Digite aqui seu email" />
+        <input [(ngModel)]="createUser.email" (blur)="getAvatarUrl()" type="text" maxlength="200" placeholder="Digite aqui seu email" />
       </div>
 
       <div class="input-container">

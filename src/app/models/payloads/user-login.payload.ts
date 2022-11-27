@@ -1,4 +1,4 @@
 export interface UserLoginPayload {
-  email: string;
+  username: string;
   password: string;
 }

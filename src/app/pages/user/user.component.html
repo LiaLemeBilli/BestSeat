@@ -5,16 +5,16 @@
     <div class="user--container--content">
       <div class="user--container--content--infos">
         <div class="user--container--content--infos--image">
-          <img alt="user-image" src="assets/imgs/register-card-image.jpg" />
+          <img alt="user-image" [src]="user?.imageUrl || 'assets/imgs/register-card-image.jpg'" />
           <p>alterar</p>
         </div>
 
         <div class="user--container--content--infos--data">
           <label>Nome</label>
-          <h5>Higor Lins</h5>
+          <h5>{{ user?.name }}</h5>
 
           <label>E-mail</label>
-          <h5>higordasilvalins@gmail.com</h5>
+          <h5>{{ user?.email }}</h5>
         </div>
 
         <button>Deslogar</button>
