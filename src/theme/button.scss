@@ -38,10 +38,42 @@
   }
 }
 
+.danger-button {
+  @extend .base-button;
+
+  color: white;
+  background-color: red;
+
+  app-loading {
+    margin-left: 0.5rem;
+  }
+}
+
+.info-button {
+  @extend .base-button;
+
+  color: white;
+  background-color: black;
+
+  app-loading {
+    margin-left: 0.5rem;
+  }
+}
+
 .inverted-button {
   @extend .base-button;
 
   background-color: transparent;
   border: solid 0.1rem #BA46E1;
   color: #BA46E1;
+}
+
+.disable {
+  pointer-events: none;
+  opacity: 0.7;
+
+  &:hover, &:active, &:focus {
+    text-decoration: none;
+    transform: scale(1) !important;
+  }
 }

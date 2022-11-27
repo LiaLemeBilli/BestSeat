@@ -3,16 +3,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Ngxalert } from 'ngx-dialogs';
 import { ToastrService } from 'ngx-toastr';
-import {
-  creationRecordButton,
-  creationRecordColor,
-  creationRecordText,
-  CreationStatusEnum
-} from '../../models/enum/creation-status.enum';
-import { LessonPayload } from '../../models/payloads/lessonPayload';
+import { creationRecordButton, creationRecordText, CreationStatusEnum } from '../../models/enum/creation-status.enum';
 import { CoursePayload } from '../../models/payloads/course.payload';
+import { LessonPayload } from '../../models/payloads/lessonPayload';
 import { ModulePayload } from '../../models/payloads/module.payload';
+import { CourseModuleProxy } from '../../models/proxies/course-module.proxy';
 import { CourseProxy } from '../../models/proxies/course.proxy';
+import { LessonProxy } from '../../models/proxies/lesson.proxy';
 import { CourseService } from '../../services/course.service';
 
 //#endregion
@@ -34,39 +31,65 @@ export class NewCourseComponent implements OnInit {
 
   //#region Properties
 
-  public errorMessage: string = '';
-
-  public isLoading: boolean = false;
-
   public isLoadingCourseList: boolean = false;
 
-  public isCreatingOrEditing: boolean = false;
+  public isLoadingModuleList: boolean = false;
+
+  public isLoadingLessonList: boolean = false;
+
+  public isManagingLessons: boolean = false;
+
+  public isManagingModules: boolean = false;
+
+  public isCreatingOrEditingCourse: boolean = false;
+
+  public isCreatingOrUpdatingModule: boolean = false;
+
+  public isCreatingOrUpdatingLesson: boolean = false;
 
   public isLoadingCourseToEdit: boolean = false;
 
   public courseList: CourseProxy[] = [];
 
+  public moduleList: CourseModuleProxy[] = [];
+
+  public lessonList: LessonProxy[] = [];
+
   public course: CoursePayload = {
+    id: null,
     author: '',
     category: '',
     description: '',
-    modules: [],
     name: '',
   }
 
-  public courseIdToEdit: number = 0;
+  public module: ModulePayload = {
+    id: null,
+    title: '',
+    courseId: 0,
+  }
+
+  public lesson: LessonPayload = {
+    id: null,
+    title: '',
+    contentUrl: '',
+    description: '',
+    moduleId: 0,
+  }
 
   public alertDialog: Ngxalert = new Ngxalert;
 
   public creationStatusEnum: typeof CreationStatusEnum = CreationStatusEnum;
 
-  public creationStatus: CreationStatusEnum = CreationStatusEnum.TO_CREATE;
+  public courseCreationStatus: CreationStatusEnum = CreationStatusEnum.UPDATING;
 
-  public creationStatusText: Record<CreationStatusEnum, string> = creationRecordText;
+  public lessonCreationStatus: CreationStatusEnum = CreationStatusEnum.NONE;
 
-  public creationStatusColor: Record<CreationStatusEnum, string> = creationRecordColor;
+  public moduleCreationStatus: CreationStatusEnum = CreationStatusEnum.NONE;
 
-  public creationStatusButton: Record<CreationStatusEnum, string> = creationRecordButton;
+  public creationRecordTextLocal = creationRecordText;
+
+  public creationRecordButtonLocal = creationRecordButton;
 
   //#endregion
 
@@ -76,40 +99,14 @@ export class NewCourseComponent implements OnInit {
     await this.loadCourses();
   }
 
-  public addNewModule(): void {
-    const moduleToAdd: ModulePayload = {
-      id: null,
-      title: '',
-      lessons: [],
-      order: 0,
-      isOpened: false,
-    }
-
-    this.course.modules?.push(moduleToAdd);
-  }
-
   public async editCourse(courseId: number | undefined): Promise<void> {
     if (!courseId)
       return;
 
-    this.creationStatus = CreationStatusEnum.UPDATING;
-    this.courseIdToEdit = courseId;
-
     try {
       this.isLoadingCourseToEdit = true;
-      const course = await this.courseService.get(courseId) as CoursePayload;
-
-      course.modules = course.modules?.map(module => {
-        const newModule = module as ModulePayload;
-
-        newModule.lessons = newModule.lessons?.map(lesson => {
-          return lesson as LessonPayload;
-        }) || [];
-
-        return newModule;
-      }) || [];
-
-      this.course = course;
+      this.course = await this.courseService.get(courseId) as CoursePayload;
+      this.courseCreationStatus = CreationStatusEnum.UPDATING;
     } catch (e: any) {
       this.toastrService.error(e.message, 'Atenção!');
     } finally {
@@ -117,178 +114,20 @@ export class NewCourseComponent implements OnInit {
     }
   }
 
-  public addNewCourse(moduleIndex: number): void {
-    const classToAdd: LessonPayload = {
-      id: null,
-      isOpened: false,
-      name: '',
-      description: '',
-      contentUrl: '',
-      order: 0,
-    }
+  public activeEditeModule(module: CourseModuleProxy): void {
+    this.module.id = module.id;
+    this.module.title = module.title;
 
-    if (this.course.modules)
-      this.course.modules[moduleIndex].lessons?.push(classToAdd);
+    this.moduleCreationStatus = CreationStatusEnum.UPDATING;
   }
 
-  public removeClass(moduleIndex: number, classIndex: number): void {
-    this.alertDialog.create({
-      title: 'Deseja remover essa aula?',
-      message: 'Atenção, essa ação não poderá ser desfeita.',
-      customCssClass: 'dialog-class',
-      buttons : [
-        {
-          title : 'Remover',
-          class: 'dialog-class--default',
-          event : () => {
-            if (this.course.modules) {
-              const newModule = this.course.modules[moduleIndex];
+  public activeEditeLesson(lesson: LessonProxy): void {
+    this.lesson.id = lesson.id;
+    this.lesson.description = lesson.description;
+    this.lesson.title = lesson.title;
+    this.lesson.contentUrl = lesson.contentUrl;
 
-              if (newModule.lessons)
-                newModule.lessons.splice(classIndex, 1);
-
-              this.course.modules[moduleIndex] = newModule;
-            }
-
-            this.alertDialog.removeAlert('alert');
-          }
-        },
-        {
-          title : 'Cancelar',
-          class: 'dialog-class--cancel',
-          event : () => {
-            this.alertDialog.removeAlert('alert');
-          }
-        },
-      ]
-    });
-  }
-
-  public removeModule(moduleIndex: number): void {
-    this.alertDialog.create({
-      id: 'alert',
-      title: 'Deseja remover esse modulo?',
-      message: 'Atenção, essa ação não poderá ser desfeita.',
-      customCssClass: 'dialog-class',
-      strict: true,
-      type:'M',
-      buttons : [
-        {
-          title : 'Remover',
-          class: 'dialog-class--cancel',
-          event : () => {
-            if (this.course.modules && this.course.modules[moduleIndex])
-              this.course.modules?.splice(moduleIndex, 1);
-
-            this.alertDialog.removeAlert('alert');
-          }
-        },
-        {
-          title : 'Cancelar',
-          class: 'dialog-class--confirm',
-          event : () => {
-            this.alertDialog.removeAlert('alert');
-          }
-        },
-      ]
-    });
-  }
-
-  public trackBy(index: number, value: any) {
-    return index;
-  }
-
-  public changeStatus(status: CreationStatusEnum): void {
-    this.creationStatus = status;
-  }
-
-  public async createOrUpdateCourse(): Promise<void> {
-    try {
-      this.isCreatingOrEditing = true;
-
-      this.checkInvalidDataInPayload();
-
-      if (this.creationStatus === CreationStatusEnum.CREATING) {
-        await this.courseService.create(this.course);
-
-        this.toastrService.success('Curso criado com sucesso!');
-      }
-
-      if (this.creationStatus === CreationStatusEnum.UPDATING) {
-        await this.courseService.update(this.courseIdToEdit, this.course);
-
-        this.toastrService.success('Curso atualizado com sucesso!');
-      }
-
-      this.course = {
-        author: '',
-        modules: [],
-        name: '',
-        description: '',
-        category: ''
-      }
-
-      await this.loadCourses();
-    } catch (e: any) {
-      this.toastrService.error(e.message);
-    } finally {
-      this.isCreatingOrEditing = false;
-    }
-  }
-
-  public checkInvalidDataInPayload(): void {
-    if (this.course.name.length === 0)
-      throw new Error('É necessário definir o nome do curso.');
-
-    if (this.course.description.length === 0)
-      throw new Error('É necessário definir a descrição do curso.');
-
-    if (this.course.category === '')
-      throw new Error('É necessário definir a categoria do curso.');
-
-    if (!this.course.modules || this.course.modules.length === 0)
-      throw new Error('É necessário enviar os modulos do curso.');
-
-    if (this.course.modules) {
-      this.course.modules.forEach((module, moduleIndex) => {
-        if (module.title === '')
-          throw new Error('É necessário enviar o titulo do modulo ' + moduleIndex + '.' );
-
-        if (!module.lessons || module.lessons.length === 0)
-          throw new Error('É necessário enviar as aulas do modulo ' + moduleIndex + '.' );
-
-        if (module.lessons) {
-          module.lessons.forEach((lesson, index) => {
-            if (lesson.name.length === 0)
-              throw new Error('É necessário enviar o nome da aula ' + index + 'presente no modulo '+ moduleIndex + '.' );
-
-            if (lesson.description.length === 0)
-              throw new Error('É necessário enviar a descrição da aula ' + index + 'presente no modulo '+ moduleIndex + '.' );
-
-            if (lesson.contentUrl.length === 0)
-              throw new Error('É necessário enviar a url da aula ' + index + 'presente no modulo '+ moduleIndex + '.' );
-          });
-        }
-      })
-    }
-  }
-
-  public disableStatus(): void {
-    setTimeout(() => {
-      this.creationStatus = CreationStatusEnum.TO_CREATE
-    }, 100);
-
-    this.course = {
-      author: '',
-      category: '',
-      description: '',
-      modules: [],
-      name: '',
-    }
-  }
-
-  public trackByClass(index: number, mClass: LessonPayload) {
-    return mClass.description;
+    this.lessonCreationStatus = CreationStatusEnum.UPDATING;
   }
 
   public async loadCourses(searchContent?: string): Promise<void> {
@@ -302,6 +141,333 @@ export class NewCourseComponent implements OnInit {
     } finally {
       this.isLoadingCourseList = false;
     }
+  }
+
+  public async activeLessonCrudAndLoadLessonsByModule(module?: CourseModuleProxy): Promise<void> {
+    if (module) {
+      this.module.id = module.id;
+      this.module.title = module.title;
+    }
+
+    this.isManagingLessons = true;
+
+    try {
+      if (!this.module.id)
+        return;
+
+      this.isLoadingLessonList = true;
+      this.lessonList = await this.courseService.getLessonByModule(this.module.id) || [];
+    } catch (e: any) {
+      this.toastrService.error(e.message, 'Atenção!');
+    } finally {
+      this.isLoadingLessonList = false;
+    }
+  }
+
+  public async activeModuleCrudAndLoadModulesByCourse(): Promise<void> {
+    this.isManagingModules = true;
+
+    try {
+      if (!this.course.id)
+        return;
+
+      this.isLoadingModuleList = true;
+      this.moduleList = await this.courseService.getModulesByCourse(this.course.id) || [];
+    } catch (e: any) {
+      this.toastrService.error(e.message);
+    } finally {
+      this.isLoadingModuleList = false;
+    }
+  }
+
+  public openFormsToCreateNewCourse(): void {
+    this.course = {
+      author: '',
+      name: '',
+      description: '',
+      category: '',
+      id: null,
+      imageUrl: '',
+    }
+    this.courseCreationStatus = CreationStatusEnum.CREATING;
+  }
+
+  public async deleteModule(moduleId: number | undefined): Promise<void> {
+    try {
+      if (!moduleId)
+        return;
+
+      this.alertDialog.create({
+        title: 'Deseja remover esse modulo?',
+        message: 'Atenção, essa ação não poderá ser desfeita.',
+        customCssClass: 'dialog-class',
+        buttons : [
+          {
+            title : 'Remover',
+            class: 'dialog-class--default',
+            event : async () => {
+              await this.courseService.deleteModule(moduleId);
+              await this.activeModuleCrudAndLoadModulesByCourse();
+              this.alertDialog.removeAlert('alert');
+            }
+          },
+          {
+            title : 'Cancelar',
+            class: 'dialog-class--cancel',
+            event : () => {
+              this.alertDialog.removeAlert('alert');
+            }
+          },
+        ]
+      });
+    } catch (e: any) {
+      this.toastrService.error(e.message);
+    }
+  }
+
+  public async deleteLesson(lessonId: number | undefined): Promise<void> {
+    try {
+      if (!lessonId)
+        return;
+
+      this.alertDialog.create({
+        title: 'Deseja remover essa aula?',
+        message: 'Atenção, essa ação não poderá ser desfeita.',
+        customCssClass: 'dialog-class',
+        buttons : [
+          {
+            title : 'Remover',
+            class: 'danger-button',
+            event : async () => {
+              await this.courseService.deleteLesson(lessonId);
+              await this.activeLessonCrudAndLoadLessonsByModule();
+              this.alertDialog.removeAlert('alert');
+            }
+          },
+          {
+            title : 'Cancelar',
+            class: 'primary-button',
+            event : () => {
+              this.alertDialog.removeAlert('alert');
+            }
+          },
+        ]
+      });
+    } catch (e: any) {
+      this.toastrService.error(e.message);
+    }
+  }
+
+  public async deleteCourse(courseId?: number | null): Promise<void> {
+    try {
+      if (!courseId)
+        return;
+
+      this.alertDialog.create({
+        title: 'Deseja remover esse curso?',
+        message: 'Atenção, essa ação não poderá ser desfeita.',
+        customCssClass: 'dialog-class',
+        buttons : [
+          {
+            title : 'Remover',
+            class: 'danger-button',
+            event : async () => {
+              await this.courseService.delete(courseId);
+              await this.loadCourses();
+              this.courseCreationStatus = CreationStatusEnum.NONE
+
+              this.alertDialog.removeAlert('alert');
+            }
+          },
+          {
+            title : 'Cancelar',
+            class: 'primary-button',
+            event : () => {
+              this.alertDialog.removeAlert('alert');
+            }
+          },
+        ]
+      });
+    } catch (e: any) {
+      this.toastrService.error(e.message);
+    }
+  }
+
+  public async createOrUpdateCourse(): Promise<void> {
+    if (this.isCreatingOrEditingCourse)
+      return;
+
+    try {
+      this.isCreatingOrEditingCourse = true;
+      this.checkCourseInformation();
+
+      if (this.courseCreationStatus === CreationStatusEnum.CREATING) {
+        this.course.imageUrl = '';
+        delete this.course.id;
+
+        const course = await this.courseService.create(this.course);
+
+        if (course && course?.id)
+          this.course.id = course.id;
+
+        this.toastrService.success('Curso criado com sucesso!');
+        this.courseCreationStatus = CreationStatusEnum.UPDATING;
+      }
+
+      if (this.courseCreationStatus === CreationStatusEnum.UPDATING && this.course.id) {
+        await this.courseService.update(this.course.id, this.course);
+
+        this.toastrService.success('Curso atualizado com sucesso!');
+      }
+
+      await this.loadCourses();
+    } catch (e: any) {
+      this.toastrService.error(e.message);
+    } finally {
+      this.isCreatingOrEditingCourse = false;
+    }
+  }
+
+  public async createOrUpdateModule(): Promise<void> {
+    if (this.isCreatingOrUpdatingModule)
+      return;
+
+    try {
+      this.isCreatingOrUpdatingModule = true;
+      this.checkModuleInformation();
+
+      if (this.moduleCreationStatus === CreationStatusEnum.CREATING) {
+        delete this.module.id;
+
+        if (this.course.id)
+          this.module.courseId = this.course.id;
+
+        await this.courseService.createModule(this.module);
+
+        this.toastrService.success('Modulo criado com sucesso!');
+      }
+
+      if (this.moduleCreationStatus === CreationStatusEnum.UPDATING && this.module.id) {
+        await this.courseService.updateModule(this.module.id, this.module);
+
+        this.toastrService.success('Modulo atualizado com sucesso!');
+      }
+
+      this.moduleCreationStatus = CreationStatusEnum.NONE;
+      await this.activeModuleCrudAndLoadModulesByCourse();
+    } catch (e: any) {
+      this.toastrService.error(e.message);
+    } finally {
+      this.isCreatingOrUpdatingModule = false;
+    }
+  }
+
+  public async createOrUpdateLesson(): Promise<void> {
+    if (this.isCreatingOrUpdatingLesson)
+      return;
+
+    try {
+      this.isCreatingOrUpdatingLesson = true;
+      this.checkLessonInformation();
+
+      if (this.lessonCreationStatus === CreationStatusEnum.CREATING) {
+        delete this.lesson.id;
+
+        if (this.module.id)
+          this.lesson.moduleId = this.module.id;
+
+        await this.courseService.createLesson(this.lesson);
+
+        this.toastrService.success('Aula criada com sucesso!');
+      }
+
+      if (this.lessonCreationStatus === CreationStatusEnum.UPDATING && this.lesson.id) {
+        await this.courseService.updateLesson(this.lesson.id, this.lesson);
+
+        this.toastrService.success('Aula atualizado com sucesso!');
+      }
+
+      this.moduleCreationStatus = CreationStatusEnum.NONE;
+      await this.activeLessonCrudAndLoadLessonsByModule();
+    } catch (e: any) {
+      this.toastrService.error(e.message);
+    } finally {
+      this.isCreatingOrUpdatingLesson = false;
+    }
+  }
+
+  public cancelModule(): void {
+    this.module = {
+      id: null,
+      title: '',
+      courseId: 0,
+    }
+    this.moduleCreationStatus = CreationStatusEnum.NONE;
+  }
+
+  public cancelLesson(): void {
+    this.lesson = {
+      id: null,
+      title: '',
+      description: '',
+      contentUrl: '',
+      moduleId: 0,
+    }
+    this.lessonCreationStatus = CreationStatusEnum.NONE;
+  }
+
+  public finishModuleEdit(): void {
+    this.moduleList = [];
+    this.isManagingModules = false;
+    this.module = {
+      id: null,
+      title: '',
+      courseId: 0,
+    }
+    this.moduleCreationStatus = CreationStatusEnum.NONE;
+  }
+
+  public finishLessonEdit(): void {
+    this.lessonList = [];
+    this.isManagingLessons = false;
+    this.lesson = {
+      id: null,
+      title: '',
+      description: '',
+      contentUrl: '',
+      moduleId: 0,
+    }
+    this.lessonCreationStatus = CreationStatusEnum.NONE;
+  }
+
+  private checkCourseInformation(): void {
+    if (this.course.category?.length === 0)
+      throw new Error('É necessário definir a categoria.');
+
+    if (this.course.description?.length === 0)
+      throw new Error('É necessário definir a descrição.');
+
+    if (this.course.name?.length === 0)
+      throw new Error('É necessário definir o none.');
+
+    if (this.course.author?.length === 0)
+      throw new Error('É necessário definir o autor.');
+  }
+
+  private checkModuleInformation(): void {
+    if (this.module.title?.length === 0)
+      throw new Error('É necessário definir o titulo do modulo.');
+  }
+
+  private checkLessonInformation(): void {
+    if (this.lesson.title?.length === 0)
+      throw new Error('É necessário definir o titulo da aula.');
+
+    if (this.lesson.contentUrl?.length === 0)
+      throw new Error('É necessário definir o URL da aula.');
+
+    if (this.lesson.description?.length === 0)
+      throw new Error('É necessário definir a descrição da aula.');
   }
 
   //#endregion

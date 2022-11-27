@@ -37,6 +37,16 @@ export class HomeComponent implements OnDestroy, OnInit {
 
   public courseList: CourseProxy[] = [];
 
+  public categoryList: string[] = [
+    'Artes',
+    'Tecnologia',
+    'Programação',
+    'Educação',
+    'Finanças'
+  ];
+
+  public activatedCategoryIndex: number | null = null;
+
   public user: UserProxy | undefined = undefined;
 
   public highlightedCourse: CourseProxy = {
@@ -46,9 +56,13 @@ export class HomeComponent implements OnDestroy, OnInit {
     imageUrl: '',
   };
 
+  public searchContent: string = '';
+
   public isLogged: boolean = false;
 
   public isLoadingCourses: boolean = false;
+
+  public isLoading: boolean = false;
 
   private userSubscription: Subscription;
 
@@ -62,17 +76,40 @@ export class HomeComponent implements OnDestroy, OnInit {
     if (this.user)
       this.isLogged = true;
 
+    this.isLoading = true;
     await this.loadCourses();
+    this.isLoading = false;
   }
 
   public ngOnDestroy(): void {
     this.userSubscription?.unsubscribe();
   }
 
-  public async loadCourses(searchContent?: string, page?: number, limit?: number): Promise<void> {
+  public async selectCategory(index: number | null): Promise<void> {
+    if (this.activatedCategoryIndex === index) {
+      this.activatedCategoryIndex = null;
+      return;
+    }
+
+    this.activatedCategoryIndex = index;
+    await this.loadCourses();
+  }
+
+  public async search(searchContent: string): Promise<void> {
+    this.searchContent = searchContent;
+
+    await this.loadCourses();
+  }
+
+  public async loadCourses(page?: number, limit?: number): Promise<void> {
     try {
       this.isLoadingCourses = true;
-      const courses = await this.courseService.list(searchContent, page, limit);
+
+      let categoryFilter = '';
+      if (this.activatedCategoryIndex)
+        categoryFilter = this.categoryList[this.activatedCategoryIndex];
+
+      const courses = await this.courseService.list(this.searchContent, categoryFilter, page, limit);
 
       this.courseList = courses ? courses : [];
 

@@ -62,6 +62,14 @@
           border-radius: 1rem;
         }
 
+        &--line {
+          width: 100%;
+          height: 2px;
+          border-radius: 12%;
+          background-color: white;
+          margin: 1.5rem 0;
+        }
+
         @media (max-width: 1600px) {
           app-course-card {
             width: 25% !important;
@@ -98,43 +106,6 @@
           font-weight: bold;
           font-size: 1.2rem;
         }
-
-        & > button {
-          transition: background-color 0.3s ease-in;
-
-          position: relative;
-          height: min-content;
-          width: auto;
-          padding: 0.6rem 2rem;
-          overflow: hidden;
-
-          color: white;
-          border: 0;
-          border-radius: 22px;
-          background-color: black;
-
-          cursor: pointer;
-
-          p {
-            transition: left 0.3s ease-in;
-            position: absolute;
-            background-color: red;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            line-height: 2rem;
-            border-radius: 22px;
-          }
-
-          &:hover {
-            background-color: #101010;
-
-            p {
-              left: 0;
-            }
-          }
-        }
       }
 
       &--not-content {
@@ -147,29 +118,11 @@
 
         h5 {
           width: 80%;
+          margin: 1.5rem 0;
+
           font-size: 1.5rem;
           color: white;
           text-align: center;
-        }
-
-        & > button {
-          transition: background-color 0.3s ease-in;
-
-          height: min-content;
-          width: auto;
-          padding: 0.6rem 2rem;
-          margin-top: 1rem;
-
-          color: white;
-          border: 0;
-          border-radius: 22px;
-          background-color: #BA46E1;
-
-          cursor: pointer;
-
-          &:hover {
-            background-color: #101010;
-          }
         }
       }
 
@@ -222,25 +175,6 @@
               font-weight: bold;
               font-size: 1.2rem;
             }
-
-            & > button {
-              transition: background-color 0.3s ease-in;
-
-              height: min-content;
-              width: auto;
-              padding: 0.6rem 2rem;
-
-              color: white;
-              border: 0;
-              border-radius: 22px;
-              background-color: black;
-
-              cursor: pointer;
-
-              &:hover {
-                background-color: #101010;
-              }
-            }
           }
 
           &--list {
@@ -287,25 +221,6 @@
                     font-weight: bold;
                     font-size: 1.2rem;
                   }
-
-                  & > button {
-                    transition: background-color 0.3s ease-in;
-
-                    height: min-content;
-                    width: auto;
-                    padding: 0.6rem 2rem;
-
-                    color: white;
-                    border: 0;
-                    border-radius: 22px;
-                    background-color: black;
-
-                    cursor: pointer;
-
-                    &:hover {
-                      background-color: #101010;
-                    }
-                  }
                 }
 
                 .classes {
@@ -350,32 +265,7 @@
           gap: 1rem;
           margin-top: 2rem;
           display: flex;
-          flex-direction: row-reverse;
-          justify-content: center;
-
-          & > button {
-            display: flex;
-            gap: 1rem;
-
-            transition: background-color 0.3s ease-in;
-
-            position: relative;
-            height: min-content;
-            width: auto;
-            padding: 0.6rem 2rem;
-            overflow: hidden;
-
-            color: white;
-            border: 0;
-            border-radius: 22px;
-            background-color: black;
-
-            cursor: pointer;
-
-            &:hover {
-              background-color: #101010;
-            }
-          }
+          justify-content: flex-end;
         }
       }
     }
@@ -402,4 +292,141 @@
 
 app-loading {
   width: 100%;
+}
+
+.modal-modules {
+  animation: toup 0.3s ease-in-out;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  height: 100vh;
+  width: 100vw;
+  padding: 4rem;
+  background-color: rgba(0, 0, 0, 0.6);
+
+  &--content {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+    position: relative;
+
+    border-radius: 22px;
+    background-color: #121128;
+
+    & > .close {
+      transition: all 0.3s ease-in-out;
+
+      height: 2rem;
+      position: absolute;
+
+      top: -0.75rem;
+      right: -0.75rem;
+
+      cursor: pointer;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+
+    &--forms {
+      display: flex;
+      height: 100%;
+
+    }
+
+    &--header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      width: 100%;
+      margin-bottom: 1rem;
+
+      h5 {
+        font-size: 1.5rem;
+        color: white !important;
+      }
+    }
+
+    &--list {
+      overflow: auto;
+      flex: 1;
+
+      &::-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+        background: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: white 0 0 no-repeat padding-box;
+        border-radius: 1rem;
+      }
+      
+      h5 {
+        width: 100%;
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-align: center;
+        color: white;
+      }
+
+      app-loading {
+        height: 100%;
+      }
+
+      .module {
+        padding: 1.4rem;
+        margin-bottom: 1rem;
+        border-radius: 22px;
+        background: #241F4055;
+
+        &--name-option {
+          display: flex;
+          justify-content: space-between;
+
+          & > span {
+            color: white;
+            font-size: 1.1rem;
+            line-height: 1.4rem;
+            text-transform: uppercase;
+          }
+
+          &--options {
+            & > img {
+              height: 1.4rem;
+              transition: all 0.3s ease-in;
+              margin-left: 0.6rem;
+              cursor: pointer;
+
+              &:hover {
+                transform: scale(1.1);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@keyframes toup {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.operational-buttons {
+  display: flex;
+  justify-content: end;
+  width: 100%;
+  gap: 1rem;
 }
