@@ -4,11 +4,11 @@
 
     <div class="home--container--content">
       <div class="home--container--content--header">
-        <app-search-bar-input (onChangeValue)="loadCourses($event)"></app-search-bar-input>
+        <app-search-bar-input (onChangeValue)="search($event)"></app-search-bar-input>
         <img *ngIf="isLogged" src="assets/imgs/register-card-image.jpg" class="home--container--content--header--user" alt="user" />
       </div>
 
-      <div *ngIf="!isLoadingCourses && courseList.length !== 0" class="home--container--content--banner">
+      <div *ngIf="!isLoading && courseList.length !== 0" class="home--container--content--banner">
         <img #img alt="banner-image"
              [src]="this.highlightedCourse.imageUrl || 'assets/imgs/register-card-image.jpg'"
              (error)="img.src = 'assets/imgs/register-card-image.jpg'"
@@ -20,13 +20,16 @@
       </div>
 
       <div class="home--container--content--courses">
-        <div *ngIf="!isLoadingCourses && courseList.length !== 0" class="home--container--content--courses--filters">
-          <div class="filter-tag filter-selected">
+        <div *ngIf="!isLoading && courseList.length !== 0" class="home--container--content--courses--filters">
+          <div (click)="selectCategory(null)" [class.filter-selected]="activatedCategoryIndex === null"  class="filter-tag">
             Todos
           </div>
 
-          <div class="filter-tag">
-            Artes
+          <div *ngFor="let category of categoryList; let i = index"
+               [class.filter-selected]="i === activatedCategoryIndex"
+               (click)="selectCategory(i)"
+               class="filter-tag">
+            {{ category }}
           </div>
         </div>
 

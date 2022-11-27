@@ -22,25 +22,18 @@
         </div>
       </div>
 
-      <div class="new-course--container--content--form-status">
-        <h4>Formulário</h4>
-        <button (click)="changeStatus(creationStatusEnum.CREATING)"
-                [style.backgroundColor]="creationStatusColor[creationStatus]">
-          {{ creationStatusText[creationStatus] }}
-          <p (click)="disableStatus()"
-             *ngIf="creationStatus !== creationStatusEnum.TO_CREATE">Cancelar</p>
-        </button>
-      </div>
+      <div class="new-course--container--content--courses--line"></div>
 
-      <div *ngIf="creationStatus === creationStatusEnum.TO_CREATE"
+      <div *ngIf="courseCreationStatus === creationStatusEnum.NONE"
            class="new-course--container--content--not-content">
         <h5>Clique em um curso para editar, <br> ou crie um novo clicando no botão abaixo</h5>
-        <button (click)="changeStatus(creationStatusEnum.CREATING)">
+        <button class="primary-button" (click)="openFormsToCreateNewCourse()">
           Novo Curso
         </button>
       </div>
 
-      <div *ngIf="creationStatus !== creationStatusEnum.TO_CREATE" class="new-course--container--content--form">
+      <div *ngIf="courseCreationStatus !== creationStatusEnum.NONE"
+           class="new-course--container--content--form">
         <div class="new-course--container--content--form--image-input">
           <img alt="register-card" src="assets/imgs/register-card-image.jpg" />
           <p>Alterar</p>
@@ -71,81 +64,119 @@
         <div class="new-course--container--content--form--modules">
           <div class="new-course--container--content--form--modules--manage">
             <h4>Gerencie os modulos do seu curso</h4>
-            <button (click)="addNewModule()">Adicionar Modulo</button>
+            <button [class.disable]="courseCreationStatus !== creationStatusEnum.UPDATING"
+                    class="info-button"
+                    (click)="activeModuleCrudAndLoadModulesByCourse()">Gerenciar Modulos</button>
           </div>
-
-          <div class="new-course--container--content--form--modules--list">
-            <div *ngFor="let module of course.modules; let m = index; trackBy: trackBy"
-                 class="module">
-              <div class="module--name-option">
-                <span>{{ m + ' - ' + (module.title || 'Sem nome') }}</span>
-                <div class="module--name-option--options">
-                  <img (click)="removeModule(m)" alt="icon" src="assets/icons/trash.svg" />
-                  <img (click)="module.isOpened = !module.isOpened"
-                       alt="icon"
-                       [src]="module.isOpened ? 'assets/icons/arrow-up.svg' : 'assets/icons/arrow-down.svg'" />
-                </div>
-              </div>
-
-              <ng-container *ngIf="module.isOpened">
-                <div class="input-container">
-                  <label>Titulo do modulo</label>
-                  <input [(ngModel)]="module.title" placeholder="Titulo" />
-                </div>
-
-                <div class="module--classes">
-                  <div class="module--classes--manage">
-                    <h4>Gerencie as aulas dos modulos</h4>
-                    <button (click)="addNewCourse(m)">Adicionar aula</button>
-                  </div>
-
-                  <div *ngFor="let mClass of module.lessons; let c = index; trackBy: trackBy" class="classes">
-                    <div class="classes--name-option">
-                      <span>{{ c + ' - ' + (mClass.name || 'Sem nome') }}</span>
-                      <div class="classes--name-option--options">
-                        <img (click)="removeClass(m, c)" alt="icon" src="assets/icons/trash.svg" />
-                        <img (click)="mClass.isOpened = !mClass.isOpened"
-                             alt="icon"
-                             [src]="mClass.isOpened ? 'assets/icons/arrow-up.svg' : 'assets/icons/arrow-down.svg'" />
-                      </div>
-                    </div>
-
-                    <ng-container *ngIf="mClass.isOpened">
-                      <div class="input-container">
-                        <label>Titulo do aula</label>
-                        <input [(ngModel)]="mClass.name" placeholder="Titulo" />
-                      </div>
-
-                      <div class="input-container">
-                        <label>Descrição da aula</label>
-                        <input [(ngModel)]="mClass.description" placeholder="Descrição" />
-                      </div>
-
-                      <div class="input-container">
-                        <label>URL da aula</label>
-                        <input [(ngModel)]="mClass.contentUrl" placeholder="URL" />
-                      </div>
-                    </ng-container>
-                  </div>
-                </div>
-              </ng-container>
-            </div>
-          </div>
-
         </div>
 
         <div class="new-course--container--content--form--buttons">
-          <button (click)="createOrUpdateCourse()"
-                  [style.backgroundColor]="creationStatusColor[creationStatus]">
-            {{ creationStatusButton[creationStatus] }}
-            <app-loading *ngIf="isCreatingOrEditing" [size]="20"></app-loading>
+          <button *ngIf="courseCreationStatus === creationStatusEnum.UPDATING" (click)="deleteCourse(course?.id)" class="danger-button">
+            Deletar
           </button>
 
-          <button (click)="disableStatus()"
-                  [style.backgroundColor]="'red'">
+          <button (click)="courseCreationStatus = creationStatusEnum.NONE" class="danger-button">
             Cancelar
           </button>
+
+          <button (click)="createOrUpdateCourse()" class="primary-button">
+            {{ creationRecordButtonLocal[courseCreationStatus] }}
+            <app-loading *ngIf="isCreatingOrEditingCourse" [size]="20"></app-loading>
+          </button>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="isManagingModules" class="modal-modules">
+  <div class="modal-modules--content">
+    <img (click)="finishModuleEdit()" class="close" alt="icon" src="assets/icons/close.svg" />
+
+    <div class="modal-modules--content--header">
+      <h5>Gerencie os modulos do curso {{ course.name }}</h5>
+      <button (click)="moduleCreationStatus = creationStatusEnum.CREATING" class="primary-button">{{ creationRecordTextLocal[moduleCreationStatus] }}</button>
+    </div>
+
+    <div *ngIf="moduleCreationStatus === creationStatusEnum.NONE" class="modal-modules--content--list">
+      <div *ngFor="let module of moduleList" class="module">
+        <div class="module--name-option">
+          <span>{{ module.title || '-' }}</span>
+          <div class="module--name-option--options">
+            <img (click)="deleteModule(module?.id)" alt="icon" src="assets/icons/trash.svg" />
+            <img (click)="activeEditeModule(module)" alt="icon" src="assets/icons/edit.svg" />
+            <img (click)="activeLessonCrudAndLoadLessonsByModule(module)" alt="icon" src="assets/icons/plus.svg" />
+          </div>
+        </div>
+      </div>
+
+      <app-loading *ngIf="isLoadingModuleList" [size]="85"></app-loading>
+      <h5 *ngIf="!isLoadingModuleList && this.moduleList.length === 0">Não existe nenhum modulo cadastrado no momento</h5>
+    </div>
+
+    <div *ngIf="moduleCreationStatus !== creationStatusEnum.NONE" class="model-modules--content--forms">
+      <div class="input-container">
+        <label>Nome</label>
+        <input [(ngModel)]="module.title" type="text" maxlength="200" placeholder="Digite o nome do modulo" />
+      </div>
+
+      <div class="operational-buttons">
+        <button (click)="cancelModule()" class="danger-button">Cancelar</button>
+        <button (click)="createOrUpdateModule()" class="primary-button">
+          {{  creationRecordButtonLocal[moduleCreationStatus] }}
+          <app-loading *ngIf="isCreatingOrUpdatingModule" [size]="20"></app-loading>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="isManagingLessons" class="modal-modules">
+  <div class="modal-modules--content">
+    <img (click)="finishLessonEdit()" class="close" alt="icon" src="assets/icons/close.svg" />
+
+    <div class="modal-modules--content--header">
+      <h5>Gerencie as aulas do modulo {{ module.title }}</h5>
+      <button (click)="lessonCreationStatus = creationStatusEnum.CREATING" class="primary-button">{{ creationRecordTextLocal[lessonCreationStatus] }}</button>
+    </div>
+
+    <div *ngIf="lessonCreationStatus === creationStatusEnum.NONE" class="modal-modules--content--list">
+      <div *ngFor="let lesson of lessonList" class="module">
+        <div class="module--name-option">
+          <span>{{ lesson.title || '' }}</span>
+          <div class="module--name-option--options">
+            <img (click)="deleteLesson(lesson.id)" alt="icon" src="assets/icons/trash.svg" />
+            <img (click)="activeEditeLesson(lesson)" alt="icon" src="assets/icons/edit.svg" />
+          </div>
+        </div>
+      </div>
+
+      <app-loading *ngIf="isLoadingLessonList" [size]="85"></app-loading>
+      <h5 *ngIf="!isLoadingLessonList && this.lessonList.length === 0">Não existe nenhuma aula cadastrada no momento</h5>
+    </div>
+
+    <div *ngIf="lessonCreationStatus !== creationStatusEnum.NONE" class="model-modules--content--forms">
+      <div class="input-container">
+        <label>Titulo</label>
+        <input [(ngModel)]="lesson.title" type="text" maxlength="200" placeholder="Digite o nome do modulo" />
+      </div>
+
+      <div class="input-container">
+        <label>Descrição</label>
+        <input [(ngModel)]="lesson.description" type="text" maxlength="200" placeholder="Digite o nome do modulo" />
+      </div>
+
+      <div class="input-container">
+        <label>URL da aula</label>
+        <input [(ngModel)]="lesson.contentUrl" type="text" maxlength="200" placeholder="Digite o nome do modulo" />
+      </div>
+
+      <div class="operational-buttons">
+        <button (click)="cancelLesson()" class="danger-button">Cancelar</button>
+        <button (click)="createOrUpdateLesson()" class="primary-button">
+          {{  creationRecordButtonLocal[lessonCreationStatus] }}
+          <app-loading *ngIf="isCreatingOrUpdatingLesson" [size]="20"></app-loading>
+        </button>
       </div>
     </div>
   </div>

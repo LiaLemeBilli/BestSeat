@@ -1,10 +1,8 @@
-import { ModulePayload } from './module.payload';
-
 export interface CoursePayload {
+  id?: number | null;
   name: string;
-  category: string;
+  category?: string;
   author?: string;
   description: string;
-
-  modules?: ModulePayload[];
+  imageUrl?: string;
 }
