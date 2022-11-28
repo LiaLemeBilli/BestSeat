@@ -43,7 +43,7 @@
                            [backgroundImage]="course.imageUrl || 'assets/imgs/register-card-image.jpg'"
                            [courseName]="course.name || '-'"
                            [tagName]="course.category || '-'"
-                           [routerLink]="'/course/' + this.course?.id"
+                           (click)="goToCourse(course?.id)"
           ></app-course-card>
         </div>
 

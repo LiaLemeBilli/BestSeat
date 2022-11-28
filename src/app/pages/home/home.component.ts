@@ -1,6 +1,7 @@
 //#region Imports
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { CourseProxy } from '../../models/proxies/course.proxy';
@@ -19,6 +20,7 @@ export class HomeComponent implements OnDestroy, OnInit {
   //#region Constructors
 
   constructor(
+    private readonly router: Router,
     private readonly userService: UserService,
     private readonly courseService: CourseService,
     private readonly toastrService: ToastrService,
@@ -94,6 +96,16 @@ export class HomeComponent implements OnDestroy, OnInit {
     this.searchContent = searchContent;
 
     await this.loadCourses();
+  }
+
+  public async goToCourse(courseId: number | undefined): Promise<void> {
+    if (!this.isLogged) {
+      this.toastrService.info('É necessário estar logado para acessar um curso', 'Olá, bem vindo');
+      return;
+    }
+
+    if (courseId)
+      await this.router.navigateByUrl('/course/' + courseId.toString());
   }
 
   public async loadCourses(page?: number, limit?: number): Promise<void> {
