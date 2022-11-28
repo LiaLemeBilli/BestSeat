@@ -44,7 +44,7 @@ body {
   justify-content: center;
   align-items: center;
 
-  padding: .7rem 3rem !important;
+  padding: .7rem 2rem !important;
   min-height: 2.4rem !important;
   height: 2.4rem !important;
   margin-left: 0.3rem !important;
@@ -96,6 +96,8 @@ body {
     border-radius: 22px !important;
 
     .ngx-dialog-footer {
+      display: flex;
+      justify-content: center;
       margin: 1rem 0 0 0 !important;
       padding: 0 !important;
     }

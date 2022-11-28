@@ -5,22 +5,27 @@
     <div class="home--container--content">
       <div class="home--container--content--header">
         <app-search-bar-input (onChangeValue)="search($event)"></app-search-bar-input>
-        <img *ngIf="isLogged" [src]="user?.imageUrl || 'assets/imgs/register-card-image.jpg'" class="home--container--content--header--user" alt="user" />
+        <div *ngIf="!isLogged" class="home--container--content--header--register">
+          <h6 [routerLink]="'/login'">Logar</h6>
+          <button [routerLink]="'/register'" class="primary-button">Registrar-se</button>
+        </div>
+        <img [routerLink]="'/user'" *ngIf="isLogged" [src]="user?.imageUrl || 'assets/imgs/register-card-image.jpg'" class="home--container--content--header--user" alt="user" />
       </div>
 
-      <div *ngIf="!isLoading && courseList.length !== 0" class="home--container--content--banner">
+      <div class="home--container--content--banner">
         <img #img alt="banner-image"
-             [src]="this.highlightedCourse.imageUrl || 'assets/imgs/register-card-image.jpg'"
+             [src]="this.highlightedCourse?.imageUrl || 'assets/imgs/register-card-image.jpg'"
              (error)="img.src = 'assets/imgs/register-card-image.jpg'"
         />
-        <h3>{{ this.highlightedCourse.name }}</h3>
+        <h3>{{ this.highlightedCourse?.name }}</h3>
+        <h6>{{ this.highlightedCourse?.category || '-' }}</h6>
         <button [routerLink]="'/course/' + this.highlightedCourse?.id" class="primary-button">
           Ver mais
         </button>
       </div>
 
       <div class="home--container--content--courses">
-        <div *ngIf="!isLoading && courseList.length !== 0" class="home--container--content--courses--filters">
+        <div class="home--container--content--courses--filters">
           <div (click)="selectCategory(null)" [class.filter-selected]="activatedCategoryIndex === null"  class="filter-tag">
             Todos
           </div>
@@ -52,6 +57,11 @@
     </div>
   </div>
 
-  <div class="home--footer"></div>
+  <div class="home--footer">
+    <img alt="log" src="assets/icons/logo-extended.svg" />
+    <p>O melhor lugar para você evoluir.</p>
+
+    <span>© 2022</span>
+  </div>
 
 </div>

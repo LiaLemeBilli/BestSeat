@@ -2,6 +2,7 @@
 
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { Ngxalert } from 'ngx-dialogs';
 import { Subscription } from 'rxjs';
 import { NavbarInterface } from '../../models/interfaces/navbar.interface';
 import { UserProxy } from '../../models/proxies/user.proxy';
@@ -44,6 +45,8 @@ export class NavbarComponent implements OnDestroy, OnInit {
   @Output()
   public onChangeActivatedMenu: EventEmitter<NavbarInterface> = new EventEmitter<NavbarInterface>();
 
+  public alertDialog: Ngxalert = new Ngxalert;
+
   public user: UserProxy = {
     name: '',
     imageUrl: '',
@@ -74,10 +77,36 @@ export class NavbarComponent implements OnDestroy, OnInit {
   }
 
   public async logoutOrLoginUser(): Promise<void> {
-    if (this.isUserLogged)
-      this.userService.logout();
+    if (this.isUserLogged) {
+      this.alertDialog.create({
+        id: 'alert',
+        title: 'Deseja realmente deslogar?',
+        customCssClass: 'dialog-class',
+        strict: false,
+        type: 'S',
+        buttons : [
+          {
+            title : 'Sim',
+            class: 'dialog-class--cancel',
+            event : async () => {
+              this.userService.logout();
+              this.alertDialog.removeAlert('alert');
+            }
+          },
+          {
+            title : 'Cancelar',
+            class: 'dialog-class--confirm',
+            event : () => {
+              this.alertDialog.removeAlert('alert');
+            }
+          },
+        ]
+      });
 
-    await this.router.navigateByUrl('\login')
+      return;
+    }
+
+    await this.router.navigateByUrl('/login')
   }
 
   public ngOnDestroy(): void {

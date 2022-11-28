@@ -74,3 +74,19 @@
     </div>
   </div>
 </div>
+
+<div *ngIf="needRegisterInCourse" class="modal-modules">
+  <div class="modal-modules--content">
+    <img [src]="course?.imageUrl || 'assets/imgs/register-card-image.jpg'"  />
+
+    <div class="modal-modules--content--description">
+      <h4>{{ course?.name }}</h4>
+
+      <h5>{{ course?.description }}</h5>
+      <h6>Esse curso contem {{ course?.modules?.length }} modulos com {{ amountClass }} aulas.</h6>
+
+      <button (click)="registerInCourse()" class="primary-button bm-5">Matricular-se</button>
+      <button (click)="back()" class="danger-button">Cancelar</button>
+    </div>
+  </div>
+</div>

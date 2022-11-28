@@ -49,12 +49,7 @@ export class HomeComponent implements OnDestroy, OnInit {
 
   public user: UserProxy | undefined = undefined;
 
-  public highlightedCourse: CourseProxy = {
-    name: '',
-    description: '',
-    category: '',
-    imageUrl: '',
-  };
+  public highlightedCourse: CourseProxy | null = null;
 
   public searchContent: string = '';
 
@@ -113,7 +108,7 @@ export class HomeComponent implements OnDestroy, OnInit {
 
       this.courseList = courses ? courses : [];
 
-      if (this.courseList.length !== 0)
+      if (this.courseList.length !== 0 && !this.highlightedCourse)
         this.highlightedCourse = this.courseList[0];
     } catch (e: any) {
       this.toastrService.error(e.message, 'Atenção!');

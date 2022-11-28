@@ -8,6 +8,7 @@ import { ModulePayload } from '../../models/payloads/module.payload';
 import { CourseModuleProxy } from '../../models/proxies/course-module.proxy';
 import { CourseProxy } from '../../models/proxies/course.proxy';
 import { LessonProxy } from '../../models/proxies/lesson.proxy';
+import { UserCourseProxy } from '../../models/proxies/user-course.proxy';
 
 //#endregion
 
@@ -66,7 +67,7 @@ export class CourseInteractor {
   }
 
   public async updateLesson(id: number, lesson: LessonPayload): Promise<LessonProxy | undefined> {
-    return await this.http.post<LessonProxy>('lesson/' + id.toString(), lesson).toPromise().catch(error => {
+    return await this.http.put<LessonProxy>('lesson/' + id.toString(), lesson).toPromise().catch(error => {
       throw new Error(error.error.message);
     });
   }
@@ -84,7 +85,7 @@ export class CourseInteractor {
   }
 
   public async updateModule(id: number, module: ModulePayload): Promise<CourseModuleProxy | undefined> {
-    return await this.http.post<CourseModuleProxy>('course-module/' + id.toString(), module).toPromise().catch(error => {
+    return await this.http.put<CourseModuleProxy>('course-module/' + id.toString(), module).toPromise().catch(error => {
       throw new Error(error.error.message);
     });
   }
@@ -139,6 +140,17 @@ export class CourseInteractor {
     });
   }
 
+  public async registerCourse(courseId: number, userId: number): Promise<void> {
+    return await this.http.post<void>('user-course', { courseId, userId }).toPromise().catch(error => {
+      throw new Error(error.error.message);
+    });
+  }
+
+  public async getRegisters(userId: number): Promise<UserCourseProxy[] | undefined> {
+    return await this.http.get<UserCourseProxy[]>('user-course?userId=' + userId.toString()).toPromise().catch(error => {
+      throw new Error(error.error.message);
+    });
+  }
 
   //#endregion
 

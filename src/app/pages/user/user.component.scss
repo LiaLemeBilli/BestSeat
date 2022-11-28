@@ -33,7 +33,7 @@
         display: flex;
 
         background: #241F40;
-        width: 80%;
+        width: 100%;
         height: auto;
         padding: 2rem;
 
@@ -45,15 +45,15 @@
           align-items: center;
 
           img {
-            width: 10rem;
-            height: 10rem;
+            width: 7rem;
+            height: 7rem;
 
             border-radius: 0.7rem;
             object-fit: cover;
             border: solid #BA46E1 0.2rem;
           }
 
-          & > p {
+          & > a {
             transition: all 0.3s ease-in;
             margin-top: 1rem;
 

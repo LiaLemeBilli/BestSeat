@@ -8,6 +8,7 @@ import { ModulePayload } from '../models/payloads/module.payload';
 import { CourseModuleProxy } from '../models/proxies/course-module.proxy';
 import { CourseProxy } from '../models/proxies/course.proxy';
 import { LessonProxy } from '../models/proxies/lesson.proxy';
+import { UserCourseProxy } from '../models/proxies/user-course.proxy';
 import { StorageService } from './storage.service';
 
 //#endregion
@@ -116,6 +117,14 @@ export class CourseService {
 
   public getFavorites(): number[] {
     return this.storageService.getItem<number[]>('FAVORITES').success || [];
+  }
+
+  public async registerCourse(courseId: number, userId: number): Promise<void> {
+    return await this.interactor.registerCourse(courseId, userId);
+  }
+
+  public async getRegisters(userId: number): Promise<UserCourseProxy[] | undefined> {
+    return await this.interactor.getRegisters(userId);
   }
 
   //#endregion

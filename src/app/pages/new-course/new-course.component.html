@@ -35,14 +35,27 @@
       <div *ngIf="courseCreationStatus !== creationStatusEnum.NONE"
            class="new-course--container--content--form">
         <div class="new-course--container--content--form--image-input">
-          <img alt="register-card" src="assets/imgs/register-card-image.jpg" />
-          <p>Alterar</p>
+          <img [style.display]="isValidImage ? 'none' : 'block'" alt="register-card"
+               src="assets/imgs/register-card-image.jpg"
+          />
+          <img [style.display]="!isValidImage ? 'none' : 'block'"
+               #img
+               alt="register-card"
+               [src]="course.imageUrl"
+               (error)="isValidImage = false"
+               (load)="isValidImage = true"
+          />
         </div>
 
         <div class="new-course--container--content--form--base-info">
           <div class="input-container">
             <label>Nome do curso</label>
             <input [(ngModel)]="course.name" placeholder="Nome do curso" />
+          </div>
+
+          <div class="input-container">
+            <label>Imagem do curso</label>
+            <input [(ngModel)]="course.imageUrl" placeholder="Imagen do curso" />
           </div>
 
           <div class="input-container">
