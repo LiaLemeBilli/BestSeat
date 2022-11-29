@@ -86,7 +86,11 @@ export class CourseService {
   }
 
   public async getLessonByModule(moduleId: number): Promise<LessonProxy[] | undefined> {
-    return await this.interactor.getLessonByModule(moduleId);
+    let lessons = await this.interactor.getLessonByModule(moduleId);
+
+    lessons = lessons?.filter(x => x.courseModuleId === moduleId)
+
+    return lessons;
   }
 
   public saveFavorite(courseId: number): void {
