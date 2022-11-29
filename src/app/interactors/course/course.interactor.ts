@@ -130,7 +130,7 @@ export class CourseInteractor {
 
   public async getLessonByModule(id: number): Promise<LessonProxy[] | undefined> {
     const s = {
-      module: id
+      courseModuleId: id
     }
 
     const url = 'lesson?s=' + encodeURIComponent(JSON.stringify(s));
