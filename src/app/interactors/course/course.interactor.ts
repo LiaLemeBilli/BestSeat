@@ -121,7 +121,7 @@ export class CourseInteractor {
   }
 
   public async getModulesByCourse(id: number): Promise<CourseModuleProxy[] | undefined> {
-    const url = 'course-module/list?couseId=' + id.toString();
+    const url = 'course-module/list?courseId=' + id.toString();
 
     return await this.http.get<CourseModuleProxy[]>(url).toPromise().catch(error => {
       throw new Error(error.error.message);
